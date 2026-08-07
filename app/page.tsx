@@ -1,3 +1,4 @@
+import { PortfolioLab } from '@/components/portfolio-lab'
 import { PortfolioNav } from '@/components/portfolio-nav'
 
 const whyCards = [
@@ -61,7 +62,8 @@ export default function Page() {
   return (
     <main id="top">
       <PortfolioNav />
-      <section className="hero shell" aria-labelledby="hero-title">
+      <PortfolioLab />
+      <section className="hero shell legacy-hero" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="kicker">BSCS Graduate · FAST-NUCES, 2026</p>
           <p className="status">Digital Marketing Intern at Atlas Honda Pakistan</p>
@@ -96,7 +98,7 @@ export default function Page() {
 
       <section className="section shell achievements"><div className="section-label">09 / Achievements</div><div className="achievement-row"><div><strong>100+</strong><p>students taught</p></div><div><strong>20+</strong><p>students mentored</p></div><div><strong>39</strong><p>auth tests shipped</p></div><div><strong>400+</strong><p>resources curated</p></div></div></section>
 
-      <section id="contact" className="contact-section"><div className="shell contact-inner"><div><p className="kicker">Let&apos;s build something useful</p><h2>Open to roles where <em>the work matters.</em></h2><p>Software engineering, backend, and full-stack opportunities — especially where good systems can improve healthcare, education, or everyday operations.</p></div><div className="contact-links"><a href="mailto:shahyed99@gmail.com"><span>Email</span>shahyed99@gmail.com <b>↗</b></a><a href="tel:+923473263667"><span>Phone</span>+92 347 326 3667 <b>↗</b></a><a href="https://www.linkedin.com/in/syed-muhammad-ali-naqvi-1a9576331" target="_blank" rel="noreferrer"><span>LinkedIn</span>Connect with me <b>↗</b></a><a href="https://github.com/AliShah1029384756" target="_blank" rel="noreferrer"><span>GitHub</span>AliShah1029384756 <b>↗</b></a></div></div></section>
+      <section id="contact" className="contact-section"><div className="shell contact-inner"><div><p className="kicker">Let&apos;s build something useful</p><h2>Open to roles where <em>the work matters.</em></h2><p>Software engineering, backend, and full-stack opportunities — especially where good systems can improve healthcare, education, or everyday operations.</p></div><div className="contact-links"><a href="mailto:shahyed99@gmail.com"><span>Email</span>shahyed99@gmail.com <b>↗</b></a><a href="https://www.linkedin.com/in/syed-muhammad-ali-naqvi-1a9576331" target="_blank" rel="noreferrer"><span>LinkedIn</span>Connect with me <b>↗</b></a><a href="https://github.com/AliShah1029384756" target="_blank" rel="noreferrer"><span>GitHub</span>AliShah1029384756 <b>↗</b></a></div></div></section>
       <footer className="site-footer"><div className="shell"><span>Syed Muhammad Ali Naqvi</span><span>Built with Next.js · 2026</span></div></footer>
     </main>
   )
