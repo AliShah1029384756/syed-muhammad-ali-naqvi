@@ -126,12 +126,12 @@ h1 em, h2 em { color: var(--primary); font-style: normal; }
 .lab-intro { display: flex; align-items: end; justify-content: space-between; gap: 48px; }
 .lab-intro h1 { max-width: 760px; margin-bottom: 24px; }
 .lab-status { max-width: 220px; padding-bottom: 12px; color: var(--muted-foreground); font-family: var(--font-mono), monospace; font-size: 11px; }
-.lab-stage { display: grid; grid-template-columns: 1.3fr .7fr; min-height: 400px; margin-top: 42px; border: 1px solid var(--border); background: color-mix(in oklch, var(--card) 72%, transparent); overflow: hidden; }
-.scene-wrap { position: relative; min-height: 400px; background: radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--primary) 8%, transparent), transparent 45%); }
+.lab-stage { display: grid; grid-template-columns: 1.3fr .7fr; min-height: 500px; margin-top: 42px; border: 1px solid var(--border); background: color-mix(in oklch, var(--card) 72%, transparent); overflow: hidden; }
+.scene-wrap { position: relative; min-height: 500px; background: radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--primary) 8%, transparent), transparent 45%); }
 .scene-wrap canvas { min-height: 400px; }
 .scene-label { position: absolute; left: 24px; bottom: 22px; display: grid; gap: 4px; pointer-events: none; }
 .scene-label span, .scene-label small, .mono { color: var(--muted-foreground); font-family: var(--font-mono), monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-.scene-label strong { font-size: 18px; font-weight: 500; }
+.scene-label strong { font-size: 18px; font-weight: 500; }.core-caption { display: inline-block; padding: 5px 8px; border: 1px solid color-mix(in oklch, var(--primary) 35%, transparent); background: color-mix(in oklch, var(--background) 82%, transparent); color: var(--primary); font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: .12em; white-space: nowrap; }
 .system-panel { display: flex; flex-direction: column; padding: 24px; border-left: 1px solid var(--border); }
 .panel-top { display: flex; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid var(--border); color: var(--muted-foreground); font-family: var(--font-mono), monospace; font-size: 10px; text-transform: uppercase; }
 .system-list { display: grid; gap: 6px; padding-block: 18px; }
