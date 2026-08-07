@@ -2,105 +2,36 @@
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, OrbitControls, Sparkles } from '@react-three/drei'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Group, Mesh } from 'three'
 
-const systems = [
-  { id: 'autismart', name: 'AutiSmart', type: 'AI / Healthcare', color: '#f4b942', detail: 'Multimodal assessment, adaptive therapy, and progress reporting.' },
-  { id: 'clinic', name: 'ClinicOS', type: 'Operations', color: '#8ba4ff', detail: 'A scheduling-to-billing workflow for modern clinics.' },
-  { id: 'school', name: 'SchoolIEP', type: 'Education', color: '#c894ff', detail: 'Structured IEP records with role-based access.' },
-  { id: 'edu', name: 'EduConnect', type: 'Community', color: '#65d7bd', detail: 'Student support, resources, forums, and analytics.' },
+type System = { id: string; name: string; type: string; color: string; detail: string; problem: string; solution: string; result: string; stack: string; link?: string }
+
+const systems: System[] = [
+  { id: 'autismart', name: 'AutiSmart', type: 'AI / Healthcare', color: '#c9a45b', detail: 'Multimodal ASD detection, adaptive therapy, and progress reporting.', problem: 'Assessment and therapy planning were fragmented across disconnected workflows.', solution: 'A role-based platform for doctors, therapists, and parents with multimodal AI and structured reporting.', result: 'A unified detection-to-therapy lifecycle for the final year project.', stack: 'React · Node.js · MongoDB · Python · OpenCV · MediaPipe', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/autismart.html' },
+  { id: 'clinic', name: 'ClinicOS', type: 'Operations', color: '#c9a45b', detail: 'A scheduling-to-billing workflow for modern clinics.', problem: 'Manual clinic operations caused scheduling and billing inconsistencies.', solution: 'A unified operational flow connecting appointments, scheduling, and billing.', result: 'Core clinic operations shifted from manual to systemized execution.', stack: 'React · Node.js · MySQL', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/clinicos.html' },
+  { id: 'school', name: 'SchoolIEP', type: 'Education', color: '#c9a45b', detail: 'Structured IEP records with role-based access.', problem: 'IEP documentation and follow-up tracking lacked consistency.', solution: 'Role-based permissions and document workflows for auditable records.', result: 'A structured record lifecycle aligned with school requirements.', stack: 'React · Node.js · MySQL · RBAC', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/schooliep.html' },
+  { id: 'edu', name: 'EduConnect', type: 'Community', color: '#c9a45b', detail: 'Student support, resources, forums, and analytics.', problem: 'Student support services were fragmented across disconnected channels.', solution: 'A unified portal for forums, counseling workflows, resources, and analytics.', result: 'One access point for academic and community support.', stack: 'React · Node.js · Express · MongoDB · JWT', link: 'https://github.com/AliShah1029384756/EduConnect' },
 ]
 
 const skillNodes = ['React', 'Node.js', 'Python', 'AI / ML', 'MongoDB', 'Testing', 'Docker', 'System design']
 
-function Core({ active }: { active: string }) {
+function Core({ active, reduced }: { active: string; reduced: boolean }) {
   const group = useRef<Group>(null)
   const core = useRef<Mesh>(null)
-  const nodes = useMemo(() => Array.from({ length: 18 }, (_, index) => {
-    const angle = (index / 18) * Math.PI * 2
-    return [Math.cos(angle) * 1.7, Math.sin(angle) * 1.7, Math.sin(angle * 2) * 0.55] as [number, number, number]
-  }), [])
-
-  useFrame((state, delta) => {
-    if (!group.current || !core.current) return
-    group.current.rotation.y += delta * 0.16
-    group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.35) * 0.08
-    core.current.rotation.x += delta * 0.45
-    core.current.rotation.y += delta * 0.6
-  })
-
-  return (
-    <group ref={group}>
-      <mesh ref={core}>
-        <icosahedronGeometry args={[0.75, 2]} />
-        <meshStandardMaterial color="#f4b942" emissive="#f4b942" emissiveIntensity={0.65} metalness={0.7} roughness={0.24} wireframe />
-      </mesh>
-      {nodes.map((position, index) => (
-        <group key={index} position={position}>
-          <mesh>
-            <sphereGeometry args={[active === 'autismart' && index % 3 === 0 ? 0.14 : 0.09, 12, 12]} />
-            <meshStandardMaterial color={index % 4 === 0 ? '#f4b942' : '#8ba4ff'} emissive={index % 4 === 0 ? '#f4b942' : '#8ba4ff'} emissiveIntensity={0.8} />
-          </mesh>
-        </group>
-      ))}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.35, 0.008, 8, 96]} />
-        <meshBasicMaterial color="#f4b942" transparent opacity={0.7} />
-      </mesh>
-      <mesh rotation={[0.5, 0.8, 0.2]}>
-        <torusGeometry args={[2.05, 0.006, 8, 96]} />
-        <meshBasicMaterial color="#8ba4ff" transparent opacity={0.5} />
-      </mesh>
-    </group>
-  )
+  const nodes = useMemo(() => Array.from({ length: 18 }, (_, index) => { const angle = (index / 18) * Math.PI * 2; return [Math.cos(angle) * 1.7, Math.sin(angle) * 1.7, Math.sin(angle * 2) * 0.55] as [number, number, number] }), [])
+  useFrame((state, delta) => { if (!group.current || !core.current || reduced) return; group.current.rotation.y += delta * 0.1; group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.06; core.current.rotation.x += delta * 0.3; core.current.rotation.y += delta * 0.42 })
+  return <group ref={group}><mesh ref={core}><icosahedronGeometry args={[0.75, 2]} /><meshStandardMaterial color="#c9a45b" emissive="#c9a45b" emissiveIntensity={0.42} metalness={0.65} roughness={0.3} wireframe /></mesh>{nodes.map((position, index) => <mesh key={index} position={position} scale={active === 'autismart' && index % 3 === 0 ? 1.35 : 1}><sphereGeometry args={[0.09, 12, 12]} /><meshStandardMaterial color="#c9a45b" emissive="#c9a45b" emissiveIntensity={0.38} /></mesh>)}<mesh rotation={[Math.PI / 2, 0, 0]}><torusGeometry args={[1.35, 0.008, 8, 96]} /><meshBasicMaterial color="#c9a45b" transparent opacity={0.55} /></mesh><mesh rotation={[0.5, 0.8, 0.2]}><torusGeometry args={[2.05, 0.006, 8, 96]} /><meshBasicMaterial color="#c9a45b" transparent opacity={0.3} /></mesh></group>
 }
 
 export function PortfolioLab() {
   const [active, setActive] = useState('autismart')
   const [command, setCommand] = useState('')
+  const [booting, setBooting] = useState(true)
+  const [simple, setSimple] = useState(false)
+  const [reduced, setReduced] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const current = systems.find((system) => system.id === active) ?? systems[0]
-
-  function handleCommand(value: string) {
-    const normalized = value.toLowerCase()
-    if (normalized.includes('project') || normalized.includes('work')) document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })
-    if (normalized.includes('skill') || normalized.includes('stack')) document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' })
-    if (normalized.includes('contact') || normalized.includes('hire')) document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-    setCommand('')
-  }
-
-  return (
-    <section className="lab shell" aria-label="Interactive systems lab">
-      <div className="lab-intro">
-        <div>
-          <p className="kicker">Interactive systems lab / 2026</p>
-          <h1>I build systems that <em>make complex work clearer.</em></h1>
-          <p className="hero-lede">Full-Stack Software Engineer · AI-Assisted Developer · Technical Mentor</p>
-          <p className="hero-description">Move through the system, inspect the work, and see how healthcare, education, and engineering connect.</p>
-          <div className="button-row"><a className="button button-primary" href="#projects">Explore the systems <span>↓</span></a><a className="button button-quiet" href="#contact">Start a conversation <span>↗</span></a></div>
-        </div>
-        <div className="lab-status"><span className="pulse" /> Available for software engineering, backend, and full-stack roles</div>
-      </div>
-      <div className="lab-stage">
-        <div className="scene-wrap" aria-label="Rotating 3D engineering core">
-          <Canvas camera={{ position: [0, 0, 6.1], fov: 42 }} dpr={[1, 1.6]}>
-            <color attach="background" args={['#131a2b']} />
-            <ambientLight intensity={0.7} />
-            <pointLight position={[3, 3, 4]} color="#f4b942" intensity={18} />
-            <pointLight position={[-4, -2, 2]} color="#8ba4ff" intensity={12} />
-            <Float speed={1.3} rotationIntensity={0.12} floatIntensity={0.35}><Core active={active} /></Float>
-            <Sparkles count={80} scale={6} size={1.2} speed={0.28} color="#f4b942" />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} minPolarAngle={Math.PI / 2.8} maxPolarAngle={Math.PI / 1.8} />
-          </Canvas>
-          <div className="scene-label"><span>CORE / ONLINE</span><strong>Systems thinking</strong><small>Drag to inspect</small></div>
-        </div>
-        <div className="system-panel">
-          <div className="panel-top"><span>Choose a system</span><span className="mono">{String(systems.findIndex((system) => system.id === active) + 1).padStart(2, '0')} / 04</span></div>
-          <div className="system-list">{systems.map((system) => <button key={system.id} className={`system-button ${active === system.id ? 'is-active' : ''}`} onClick={() => setActive(system.id)}><span className="system-dot" style={{ background: system.color }} /><span><b>{system.name}</b><small>{system.type}</small></span><span>↗</span></button>)}</div>
-          <div className="system-detail"><span className="eyebrow">{current.type}</span><h3>{current.name}</h3><p>{current.detail}</p><a href="#projects">View case study <span>↓</span></a></div>
-        </div>
-      </div>
-      <div className="lab-bottom"><div><span className="eyebrow">The stack behind the work</span><div className="skill-pills">{skillNodes.map((skill) => <button key={skill} onClick={() => { setCommand(skill); document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' }) }}>{skill}</button>)}</div></div><form className="command-box" onSubmit={(event) => { event.preventDefault(); handleCommand(command) }}><span className="mono">&gt;_</span><input aria-label="Ask the portfolio" placeholder="ask: projects, skills, contact" value={command} onChange={(event) => setCommand(event.target.value)} /><button type="submit">Run</button></form></div>
-    </section>
-  )
+  useEffect(() => { const timer = window.setTimeout(() => setBooting(false), 850); const query = window.matchMedia('(prefers-reduced-motion: reduce)'); const listener = () => setReduced(query.matches); query.addEventListener('change', listener); return () => { window.clearTimeout(timer); query.removeEventListener('change', listener) } }, [])
+  function route(value: string) { const normalized = value.toLowerCase().trim(); if (normalized.includes('autismart')) setActive('autismart'); if (normalized.includes('whoami')) document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }); else if (normalized.includes('project') || normalized.includes('work')) document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); else if (normalized.includes('skill') || normalized.includes('stack')) document.querySelector('#skills')?.scrollIntoView({ behavior: 'smooth' }); else if (normalized.includes('experience')) document.querySelector('#experience')?.scrollIntoView({ behavior: 'smooth' }); else if (normalized.includes('hub')) document.querySelector('#hubs')?.scrollIntoView({ behavior: 'smooth' }); else if (normalized.includes('contact') || normalized.includes('hire')) document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); setCommand('') }
+  return <section className="lab shell" aria-label="Interactive systems lab"><div className="lab-intro"><div><p className="kicker">Interactive systems lab / 2026</p><div className="graduate-badge">GRADUATE 2026 · FAST-NUCES</div><h1>Syed Muhammad Ali Naqvi builds systems that <em>make complex work clearer.</em></h1><p className="hero-lede">FAST-NUCES BSCS Graduate · Full-Stack Software Engineer · AI-Assisted Developer · Technical Mentor</p><p className="hero-description">AutiSmart FYP · Atlas Honda Intern · 100+ students taught · 5 learning hubs</p><div className="button-row"><a className="button button-primary" href="#projects">View projects <span>↓</span></a><a className="button button-quiet" href="#contact">Contact <span>↗</span></a></div></div><div className="lab-status"><span className="pulse" /> Available for software engineering, backend, and full-stack roles</div></div><div className="lab-stage"><div className={`scene-wrap ${simple || reduced ? 'simple-scene' : ''}`} aria-label="Rotating 3D engineering core">{booting ? <div className="boot-state"><span className="pulse" /> Booting systems lab…</div> : !simple && !reduced ? <Canvas camera={{ position: [0, 0, 6.1], fov: 42 }} dpr={[1, 1.4]}><color attach="background" args={['#131a2b']} /><ambientLight intensity={0.75} /><pointLight position={[3, 3, 4]} color="#c9a45b" intensity={12} /><pointLight position={[-4, -2, 2]} color="#c9a45b" intensity={6} /><Float speed={0.8} rotationIntensity={0.08} floatIntensity={0.22}><Core active={active} reduced={reduced} /></Float><Sparkles count={36} scale={6} size={0.8} speed={0.14} color="#c9a45b" /><OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.25} /></Canvas> : <div className="simple-core" aria-hidden="true"><span /><span /><span /><span /></div>}<div className="scene-label"><span>CORE / ONLINE · 4 SYSTEMS</span><strong>{simple || reduced ? 'Simple view' : 'Systems thinking'}</strong><small>{simple || reduced ? '3D paused' : 'Drag to inspect'}</small></div></div><div className="system-panel"><div className="panel-top"><span>Choose a system</span><span className="mono">{String(systems.findIndex((system) => system.id === active) + 1).padStart(2, '0')} / 04</span></div><div className="system-list">{systems.map((system) => <button key={system.id} className={`system-button ${active === system.id ? 'is-active' : ''}`} onClick={() => setActive(system.id)}><span className="system-dot" style={{ background: system.color }} /><span><b>{system.name}</b><small>{system.type}</small></span><span>↗</span></button>)}</div><div className="system-detail"><span className="eyebrow">{current.type}</span><h3>{current.name}</h3><p>{current.detail}</p><div className="detail-grid"><div><b>Problem</b><span>{current.problem}</span></div><div><b>Solution</b><span>{current.solution}</span></div><div><b>Result</b><span>{current.result}</span></div></div><p className="mono stack-line">{current.stack}</p><a href={current.link} target="_blank" rel="noopener noreferrer">Open case study <span>↗</span></a></div></div></div><div className="lab-bottom"><div><span className="eyebrow">The stack behind the work</span><div className="skill-pills">{skillNodes.map((skill) => <button key={skill} onClick={() => route('skills')}>{skill}</button>)}</div></div><div className="lab-controls"><button className="view-toggle" type="button" onClick={() => setSimple((value) => !value)}>{simple ? 'Use 3D view' : 'Simple view'}</button><form className="command-box" onSubmit={(event) => { event.preventDefault(); route(command) }}><span className="mono">&gt;_</span><input aria-label="Ask the portfolio" placeholder="try: whoami · projects · hubs" value={command} onChange={(event) => setCommand(event.target.value)} /><button type="submit">Run</button></form></div></div></section>
 }
