@@ -4,7 +4,7 @@ export default function Page() {
   return (
     <main id="top">
       <SpaceProfile />
-      <section className="accessible-fallback shell" aria-label="Portfolio content">
+      <section className="accessible-fallback shell portfolio-content" aria-label="Portfolio content">
         <p className="kicker">Syed Muhammad Ali Naqvi · FAST-NUCES Graduate 2026</p>
         <h2>Full-Stack Software Engineer building systems that make complex work clearer.</h2>
         <p>Explore the immersive lab above, or jump to the portfolio content below.</p>
