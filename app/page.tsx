@@ -1,24 +1,22 @@
 import { SpaceProfile } from '@/components/space-profile'
 
+const projects = [
+  ['AutiSmart', 'AI / Healthcare', 'Multimodal ASD detection, adaptive therapy, and progress reporting.', 'FYP-I A+ · FYP-II A- · IEEE-format research paper', 'https://alishah1029384756.github.io/AliShah1029384756/projects/autismart.html'],
+  ['ClinicOS', 'Operations', 'Scheduling-to-billing workflow for modern clinics.', 'A systemized clinic operations lifecycle', 'https://alishah1029384756.github.io/AliShah1029384756/projects/clinicos.html'],
+  ['SchoolIEP', 'Education', 'Structured IEP records with role-based access.', 'An auditable record lifecycle for school requirements', 'https://alishah1029384756.github.io/AliShah1029384756/projects/schooliep.html'],
+  ['EduConnect', 'Community', 'Student support, resources, forums, and analytics.', 'One access point for academic and community support', 'https://github.com/AliShah1029384756/EduConnect'],
+]
+
 export default function Page() {
-  return (
-    <main id="top">
-      <SpaceProfile />
-      <section className="accessible-fallback shell portfolio-content" aria-label="Portfolio content">
-        <p className="kicker">Syed Muhammad Ali Naqvi · FAST-NUCES Graduate 2026</p>
-        <h2>Full-Stack Software Engineer building systems that make complex work clearer.</h2>
-        <p>Explore the immersive lab above, or jump to the portfolio content below.</p>
-        <nav className="fallback-links" aria-label="Portfolio sections">
-          <a href="#about">About</a><a href="#projects">Work</a><a href="#skills">Skills</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
-        </nav>
-      </section>
-      <section id="about" className="accessible-fallback shell"><h2>About</h2><p>Systems thinker before coder. I build healthcare and education systems, document decisions, and teach technical concepts clearly.</p></section>
-      <section id="projects" className="accessible-fallback shell"><h2>Selected work</h2><p>AutiSmart, ClinicOS, SchoolIEP, and EduConnect are the four flagship systems in the lab.</p></section>
-      <section id="skills" className="accessible-fallback shell"><h2>Skills</h2><p>JavaScript, Python, React, Node.js, MongoDB, MySQL, AI/ML, testing, Docker, AWS, and system design.</p></section>
-      <section id="experience" className="accessible-fallback shell"><h2>Experience</h2><p>Digital Marketing Intern at Atlas Honda Pakistan and CS Teacher, Lab In-Charge, and Hostel Warden at Al Bethat Trust Boys School &amp; College.</p></section>
-      <section id="contact" className="accessible-fallback shell"><h2>Contact</h2><a href="mailto:shahyed99@gmail.com">shahyed99@gmail.com</a></section>
-    </main>
-  )
+  return <main id="top"><SpaceProfile /><div className="portfolio-content">
+    <section id="about" className="content-section shell"><div className="section-label">01 / About</div><div className="content-grid"><h2>Systems thinker <em>before coder.</em></h2><div><p className="large-copy">I’m Syed Muhammad Ali Naqvi, a full-stack software engineer building systems that make complex work clearer.</p><p className="muted-copy">I work across healthcare, education, and operations. My approach is documentation-first, user-aware, and grounded in fundamentals: understand the problem, design the system, then make the experience feel simple.</p><div className="principles"><span>01 — Clarity</span><span>02 — Ownership</span><span>03 — Learning</span></div></div></div></section>
+    <section id="projects" className="content-section section-dark"><div className="shell"><div className="section-label">02 / Selected work</div><div className="section-head"><h2>Four systems.<br /><em>Real problems.</em></h2><p>Click any project in the 3D lab above or explore the case studies below.</p></div><div className="project-grid">{projects.map(([name, type, detail, result, link], index) => <article className="portfolio-card" key={name}><span className="card-number">0{index + 1}</span><span className="eyebrow">{type}</span><h3>{name}</h3><p>{detail}</p><div className="card-result"><b>Result</b><span>{result}</span></div><a href={link} target="_blank" rel="noopener noreferrer">View case study <span>↗</span></a></article>)}</div></div></section>
+    <section id="skills" className="content-section shell"><div className="section-label">03 / Toolkit</div><div className="section-head"><h2>Fundamentals now.<br /><em>Depth next.</em></h2><p>Strong working foundations with a deliberate roadmap toward production engineering.</p></div><div className="skills-list"><div><b>Languages</b><span>JavaScript · TypeScript · Python · SQL</span></div><div><b>Frontend</b><span>React · Next.js · HTML · CSS · Tailwind</span></div><div><b>Backend</b><span>Node.js · Express · REST APIs · MongoDB · MySQL</span></div><div><b>AI / ML</b><span>Python · Scikit-learn · TensorFlow · OpenCV</span></div><div><b>Building next</b><span>Docker · PostgreSQL · Redis · Testing · CI/CD · AWS · System design</span></div></div></section>
+    <section id="experience" className="content-section section-dark"><div className="shell"><div className="section-label">04 / Experience</div><div className="timeline"><article><span>2024 — Present</span><h3>CS Teacher · Lab In-Charge · Hostel Warden</h3><b>Al Bethat Trust Boys School &amp; College</b><p>Teaching computer science, managing practical lab environments, and supporting students through structured learning and day-to-day operations.</p></article><article><span>2023 — 2024</span><h3>Digital Marketing Intern</h3><b>Atlas Honda Pakistan</b><p>Worked across digital communication, campaign support, and the operational details behind a large organization’s online presence.</p></article></div></div></section>
+    <section id="education" className="content-section shell"><div className="section-label">05 / Education</div><div className="education-card"><div><span className="eyebrow">FAST-NUCES</span><h2>BS Computer Science</h2><p>Expected graduation · 2026</p></div><div><b>Recognition</b><p>Dean’s List · President’s List · Final Year Project research paper</p><b>Focus</b><p>Full-stack systems, AI-assisted development, software architecture, and clear technical communication.</p></div></div></section>
+    <section id="contact" className="contact-section"><div className="shell contact-grid"><div><div className="section-label">06 / Contact</div><h2>Have a meaningful system to build?</h2><p>Let’s talk about a product, a technical problem, or a team that values thoughtful engineering.</p></div><div className="contact-list"><a href="mailto:shahyed99@gmail.com"><span>Email</span><b>shahyed99@gmail.com</b><i>↗</i></a><a href="https://www.linkedin.com/in/syed-muhammad-ali-naqvi/" target="_blank" rel="noopener noreferrer"><span>LinkedIn</span><b>Connect professionally</b><i>↗</i></a><a href="https://github.com/AliShah1029384756" target="_blank" rel="noopener noreferrer"><span>GitHub</span><b>Explore the code</b><i>↗</i></a></div></div></section>
+    <footer className="site-footer shell"><span>© 2026 Syed Muhammad Ali Naqvi</span><span>Built with clarity.</span></footer>
+  </div></main>
 }
 
 export const dynamic = 'force-static'
