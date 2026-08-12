@@ -1,3 +1,4 @@
+import './immersive-finale.css'
 import { SpaceProfile } from '@/components/space-profile'
 
 const projects = [
