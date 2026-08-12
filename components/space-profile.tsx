@@ -1,255 +1,182 @@
 'use client'
 
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, Html, Line, OrbitControls, Sparkles, Text } from '@react-three/drei'
+import { Float, Html, OrbitControls, Sparkles, Text } from '@react-three/drei'
 import { useEffect, useMemo, useState } from 'react'
-import type { ThreeEvent } from '@react-three/fiber'
 import type { Group } from 'three'
 
-type Project = {
-  id: string
-  name: string
-  type: string
-  detail: string
-  result: string
-  link: string
-  position: [number, number, number]
-  color: string
+const zones = [
+  { id: 'about', label: 'ABOUT', title: 'The thinking layer', position: [-5.2, 1.0, -1.5] as [number, number, number], color: '#70e8ff' },
+  { id: 'projects', label: 'PROJECTS', title: 'Systems built', position: [5.2, 1.0, -1.5] as [number, number, number], color: '#b89cff' },
+  { id: 'skills', label: 'SKILLS', title: 'The toolkit', position: [-4.4, -1.2, -2.6] as [number, number, number], color: '#9ff08b' },
+  { id: 'experience', label: 'EXPERIENCE', title: 'Where I learned', position: [4.4, -1.2, -2.6] as [number, number, number], color: '#f4c779' },
+  { id: 'education', label: 'EDUCATION', title: 'Academic foundation', position: [-2.4, 2.8, -3.8] as [number, number, number], color: '#79b9ff' },
+  { id: 'contact', label: 'CONTACT', title: 'Start a conversation', position: [2.4, 2.8, -3.8] as [number, number, number], color: '#ff9fbe' },
+]
+
+const projects = [
+  ['AUTISMART', 'AI / HEALTHCARE', 'FYP-I A+ · FYP-II A- · Deployed & presented', 'https://alishah1029384756.github.io/AliShah1029384756/projects/autismart.html', '#70e8ff'],
+  ['CLINICOS', 'HEALTHCARE OPERATIONS', 'Clinic workflow and operational systems', 'https://alishah1029384756.github.io/AliShah1029384756/projects/clinicos.html', '#b89cff'],
+  ['SCHOOLIEP', 'EDUCATION', 'Structured IEP records and workflows', 'https://alishah1029384756.github.io/AliShah1029384756/projects/schooliep.html', '#9ff08b'],
+  ['EDUCORE', 'OPEN LEARNING', '400+ curated technical resources', 'https://alishah1029384756.github.io/educore-open-learning-hub/', '#f4c779'],
+] as const
+
+function Ship({ position = [0, 0, 0] as [number, number, number] }) {
+  const ref = useMemo(() => ({ current: null as Group | null }), [])
+  useFrame((_, delta) => { if (ref.current) ref.current.rotation.z += delta * 0.18 })
+  return (
+    <Float speed={1.1} rotationIntensity={0.12} floatIntensity={0.32}>
+      <group ref={ref} position={position} rotation={[0, 0, -0.15]}>
+        <mesh>
+          <coneGeometry args={[0.42, 1.8, 6]} />
+          <meshPhysicalMaterial color="#d9f8ff" metalness={0.8} roughness={0.16} clearcoat={1} />
+        </mesh>
+        <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, -0.42, 0]}>
+          <cylinderGeometry args={[0.25, 0.42, 0.8, 16]} />
+          <meshStandardMaterial color="#14263d" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {[-0.42, 0.42].map((x) => <mesh key={x} position={[x, -0.05, 0]} rotation={[0, 0, x > 0 ? -0.28 : 0.28]}><boxGeometry args={[0.7, 0.07, 0.18]} /><meshStandardMaterial color="#6ddfff" emissive="#1c7890" emissiveIntensity={2} metalness={0.55} /></mesh>)}
+        <pointLight position={[0, -1.0, 0]} color="#70e8ff" intensity={9} distance={4} />
+      </group>
+    </Float>
+  )
 }
 
-const projects: Project[] = [
-  { id: 'autismart', name: 'AUTISMART', type: 'AI / HEALTHCARE', detail: 'Team-based Final Year Project for autism assessment and care support.', result: 'FYP-I A+ · FYP-II A- · Deployed & presented', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/autismart.html', position: [-3.25, 1.0, -0.15], color: '#7de7ff' },
-  { id: 'clinicos', name: 'CLINICOS', type: 'HEALTHCARE OPERATIONS', detail: 'Clinic workflow software covering scheduling, records, and operational processes.', result: 'Systemized clinic operations lifecycle', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/clinicos.html', position: [3.15, 1.0, -0.45], color: '#c6a8ff' },
-  { id: 'schooliep', name: 'SCHOOLIEP', type: 'EDUCATION', detail: 'Structured IEP records and role-aware workflows for school environments.', result: 'Auditable education record lifecycle', link: 'https://alishah1029384756.github.io/AliShah1029384756/projects/schooliep.html', position: [-2.45, -1.55, -0.7], color: '#b8f28b' },
-  { id: 'educore', name: 'EDUCORE', type: 'OPEN LEARNING', detail: 'Student-first open-learning hub with 400+ curated technical resources.', result: 'Discoverable learning ecosystem', link: 'https://alishah1029384756.github.io/educore-open-learning-hub/', position: [2.55, -1.55, -0.9], color: '#f5c77a' },
-]
-
-const sections = [
-  ['ABOUT', 'The thinking layer', '#about'],
-  ['WORK', 'Systems built', '#projects'],
-  ['SKILLS', 'The toolkit', '#skills'],
-  ['EXPERIENCE', 'Where I learned', '#experience'],
-  ['EDUCATION', 'Academic foundation', '#education'],
-  ['CONTACT', 'Start a conversation', '#contact'],
-]
-
-function ProjectPanel({ project, active, onSelect }: { project: Project; active: boolean; onSelect: () => void }) {
-  const [hovered, setHovered] = useState(false)
-  const scale = active || hovered ? 1.08 : 1
-
+function Planet({ position, color, size = 1.25, ring = true }: { position: [number, number, number]; color: string; size?: number; ring?: boolean }) {
   return (
-    <group
-      position={project.position}
-      scale={scale}
-      onClick={(event: ThreeEvent<MouseEvent>) => { event.stopPropagation(); onSelect() }}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <mesh>
-        <boxGeometry args={[2.35, 1.45, 0.08]} />
-        <meshPhysicalMaterial color="#0b1324" transparent opacity={0.92} roughness={0.2} metalness={0.35} clearcoat={0.8} />
-      </mesh>
-      <mesh position={[0, 0, 0.055]}>
-        <planeGeometry args={[2.18, 1.28]} />
-        <meshBasicMaterial color={active || hovered ? project.color : '#132039'} transparent opacity={active || hovered ? 0.12 : 0.06} />
-      </mesh>
-      <mesh position={[-1.0, 0.48, 0.08]}>
-        <boxGeometry args={[0.035, 0.72, 0.02]} />
-        <meshBasicMaterial color={project.color} />
-      </mesh>
-      <Text position={[-0.78, 0.35, 0.11]} fontSize={0.14} color="#f3f7ff" anchorX="left" letterSpacing={0.02}>{project.name}</Text>
-      <Text position={[-0.78, 0.10, 0.11]} fontSize={0.065} color={project.color} anchorX="left" letterSpacing={0.04}>{project.type}</Text>
-      <Text position={[-0.78, -0.20, 0.11]} maxWidth={1.55} fontSize={0.065} color="#8c9ab1" anchorX="left" lineHeight={1.35}>{project.detail}</Text>
-      <Text position={[-0.78, -0.48, 0.11]} fontSize={0.052} color="#d6ddea" anchorX="left" letterSpacing={0.02}>{project.result}</Text>
-      <mesh position={[0.82, 0.49, 0.12]}>
-        <sphereGeometry args={[0.045, 16, 16]} />
-        <meshBasicMaterial color={project.color} />
-      </mesh>
+    <Float speed={0.35} rotationIntensity={0.08} floatIntensity={0.16}>
+      <group position={position}>
+        <mesh>
+          <sphereGeometry args={[size, 40, 24]} />
+          <meshPhysicalMaterial color={color} roughness={0.62} metalness={0.08} emissive={color} emissiveIntensity={0.08} />
+        </mesh>
+        {ring && <mesh rotation={[Math.PI / 2.7, 0.35, 0.2]}><torusGeometry args={[size * 1.55, size * 0.055, 10, 100]} /><meshBasicMaterial color="#d8c6ff" transparent opacity={0.5} /></mesh>}
+      </group>
+    </Float>
+  )
+}
+
+function Portal({ position, color, label }: { position: [number, number, number]; color: string; label: string }) {
+  const ref = useMemo(() => ({ current: null as Group | null }), [])
+  useFrame((state) => { if (ref.current) ref.current.rotation.z = state.clock.elapsedTime * 0.12 })
+  return (
+    <group ref={ref} position={position}>
+      {[1.0, 1.22, 1.44].map((r, i) => <mesh key={r}><torusGeometry args={[r, 0.018 + i * 0.008, 8, 96]} /><meshBasicMaterial color={color} transparent opacity={0.62 - i * 0.13} /></mesh>)}
+      <Text position={[0, -1.72, 0]} fontSize={0.13} color={color} anchorX="center" letterSpacing={0.08}>{label}</Text>
     </group>
   )
 }
 
-function Scene({ active, onSelect, reduced }: { active: string; onSelect: (id: string) => void; reduced: boolean }) {
-  const world = useMemo(() => ({ current: null as Group | null }), [])
+function AsteroidField() {
+  const asteroids = useMemo(() => Array.from({ length: 34 }, (_, i) => {
+    const a = (i / 34) * Math.PI * 2
+    const r = 5.7 + (i % 5) * 0.22
+    return { p: [Math.cos(a) * r, Math.sin(a * 3) * 0.38 - 0.8, Math.sin(a) * r - 1.5] as [number, number, number], s: 0.07 + (i % 4) * 0.035 }
+  }), [])
+  return <group>{asteroids.map((a, i) => <mesh key={i} position={a.p} rotation={[i * 0.7, i * 0.43, i * 0.2]}><icosahedronGeometry args={[a.s, 0]} /><meshStandardMaterial color={i % 3 === 0 ? '#a8b7c8' : '#46576c'} roughness={0.9} /></mesh>)}</group>
+}
 
+function ProjectDock({ active, onSelect }: { active: number; onSelect: (index: number) => void }) {
+  return (
+    <group position={[0, -0.3, -1.4]}>
+      {projects.map(([name, type, result, link, color], i) => {
+        const x = (i - 1.5) * 1.9
+        const selected = active === i
+        return <group key={name} position={[x, selected ? 0.14 : 0, 0]} scale={selected ? 1.08 : 1} onClick={(e) => { e.stopPropagation(); onSelect(i) }}>
+          <mesh><boxGeometry args={[1.62, 0.9, 0.08]} /><meshPhysicalMaterial color="#0b1324" transparent opacity={0.96} metalness={0.5} roughness={0.22} clearcoat={1} /></mesh>
+          <mesh position={[0, 0, 0.06]}><planeGeometry args={[1.48, 0.76]} /><meshBasicMaterial color={color} transparent opacity={selected ? 0.12 : 0.045} /></mesh>
+          <Text position={[-0.62, 0.22, 0.1]} fontSize={0.085} color="#f5f8ff" anchorX="left">{name}</Text>
+          <Text position={[-0.62, 0.04, 0.1]} fontSize={0.043} color={color} anchorX="left">{type}</Text>
+          <Text position={[-0.62, -0.18, 0.1]} fontSize={0.037} color="#aebbd0" maxWidth={1.18} anchorX="left">{result}</Text>
+          <mesh position={[0.62, 0.28, 0.1]}><sphereGeometry args={[0.028, 12, 12]} /><meshBasicMaterial color={color} /></mesh>
+          {selected && <pointLight position={[0, 0, 0.4]} color={color} intensity={4} distance={2.5} />}
+        </group>
+      })}
+      <Text position={[0, -0.74, 0]} fontSize={0.07} color="#6f829c" anchorX="center" letterSpacing={0.07}>PROJECT CONSTELLATION · CLICK TO SELECT</Text>
+    </group>
+  )
+}
+
+function World({ activeProject, setActiveProject, reduced }: { activeProject: number; setActiveProject: (n: number) => void; reduced: boolean }) {
+  const world = useMemo(() => ({ current: null as Group | null }), [])
   useFrame((state, delta) => {
     if (!world.current || reduced) return
-    world.current.rotation.y += delta * 0.035
-    world.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.18) * 0.015
+    world.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.08) * 0.018
+    world.current.position.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.035
   })
+  return <>
+    <color attach="background" args={['#030611']} />
+    <fog attach="fog" args={['#030611', 8, 22]} />
+    <ambientLight intensity={0.2} />
+    <hemisphereLight color="#8feaff" groundColor="#060916" intensity={0.45} />
+    <pointLight position={[5, 5, 5]} color="#69e8ff" intensity={30} distance={16} />
+    <pointLight position={[-5, 1, 2]} color="#a47dff" intensity={24} distance={14} />
+    <pointLight position={[0, -4, 3]} color="#ffbd73" intensity={14} distance={11} />
+    <group ref={world}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.2, 0]}><planeGeometry args={[20, 20]} /><meshStandardMaterial color="#050d1b" metalness={0.72} roughness={0.46} /></mesh>
+      <gridHelper args={[20, 40, '#174b61', '#0a1d30']} position={[0, -2.18, 0]} />
+      <mesh position={[0, 0.4, -5.5]}><planeGeometry args={[15, 8]} /><meshBasicMaterial color="#081225" transparent opacity={0.68} /></mesh>
+      <mesh position={[0, 0.5, -4.8]}><boxGeometry args={[11, 6.5, 0.05]} /><meshBasicMaterial color="#21405a" transparent opacity={0.13} wireframe /></mesh>
 
-  const starPositions = useMemo(() => Array.from({ length: 90 }, (_, index) => {
-    const a = index * 2.39996
-    const r = 5.5 + (index % 7) * 0.45
-    return [Math.cos(a) * r, Math.sin(a * 1.37) * 2.9, Math.sin(a) * r - 2] as [number, number, number]
-  }), [])
+      <Float speed={0.55} rotationIntensity={0.12} floatIntensity={0.22}>
+        <group position={[0, 0.45, 0]}>
+          <mesh><icosahedronGeometry args={[0.9, 3]} /><meshStandardMaterial color="#071a2d" emissive="#2bdcff" emissiveIntensity={1.05} metalness={0.7} roughness={0.2} wireframe /></mesh>
+          <mesh scale={[0.58, 1.05, 0.58]}><sphereGeometry args={[0.7, 32, 20]} /><meshPhysicalMaterial color="#101a31" emissive="#3b216f" emissiveIntensity={0.6} transparent opacity={0.9} metalness={0.55} roughness={0.17} clearcoat={1} /></mesh>
+          {[1.3, 1.72, 2.14].map((r, i) => <mesh key={r} rotation={[0.4 + i * 0.3, 0.2 + i * 0.5, i * 0.25]}><torusGeometry args={[r, 0.012, 8, 128]} /><meshBasicMaterial color={i === 1 ? '#b78cff' : '#62ddff'} transparent opacity={0.42 - i * 0.07} /></mesh>)}
+          <Text position={[0, -1.42, 0]} fontSize={0.105} color="#72e5ff" anchorX="center" letterSpacing={0.08}>ALI · DIGITAL IDENTITY</Text>
+        </group>
+      </Float>
 
-  return (
-    <>
-      <color attach="background" args={['#050914']} />
-      <fog attach="fog" args={['#050914', 7, 18]} />
-      <ambientLight intensity={0.22} />
-      <hemisphereLight color="#9feaff" groundColor="#090d19" intensity={0.42} />
-      <pointLight position={[4, 5, 5]} color="#77e6ff" intensity={28} distance={14} />
-      <pointLight position={[-5, 1, 2]} color="#9b7cff" intensity={22} distance={12} />
-      <pointLight position={[0, -3, 4]} color="#f2b76b" intensity={12} distance={10} />
-
-      <group ref={world}>
-        {/* A real spatial floor: perspective, depth and light give the scene a room-like feel. */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.25, 0]}>
-          <planeGeometry args={[18, 18]} />
-          <meshStandardMaterial color="#07101f" metalness={0.72} roughness={0.48} />
-        </mesh>
-        <gridHelper args={[18, 36, '#1d5062', '#0d2034']} position={[0, -2.22, 0]} />
-
-        {/* Floating architectural frames create a navigable digital room instead of a single object. */}
-        <mesh position={[0, 0.35, -2.5]}>
-          <boxGeometry args={[8.8, 5.2, 0.06]} />
-          <meshBasicMaterial color="#163149" transparent opacity={0.18} wireframe />
-        </mesh>
-        <mesh position={[0, -0.2, -4.2]}>
-          <planeGeometry args={[13, 7]} />
-          <meshBasicMaterial color="#0a1222" transparent opacity={0.7} />
-        </mesh>
-
-        {/* Central identity object: layered geometry reads as a spatial sculpture, not a sphere. */}
-        <Float speed={0.7} rotationIntensity={0.08} floatIntensity={0.22}>
-          <group position={[0, 0.05, 0]}>
-            <mesh>
-              <icosahedronGeometry args={[0.82, 2]} />
-              <meshStandardMaterial color="#08172a" emissive="#37dfff" emissiveIntensity={0.9} metalness={0.75} roughness={0.22} wireframe />
-            </mesh>
-            <mesh scale={[0.58, 1.05, 0.58]}>
-              <sphereGeometry args={[0.62, 32, 20]} />
-              <meshPhysicalMaterial color="#101b31" emissive="#251a55" emissiveIntensity={0.55} transparent opacity={0.88} metalness={0.55} roughness={0.18} clearcoat={1} />
-            </mesh>
-            {[1.35, 1.75, 2.2].map((radius, index) => (
-              <mesh key={radius} rotation={[0.45 + index * 0.35, 0.25 + index * 0.55, index * 0.2]}>
-                <torusGeometry args={[radius, 0.012, 8, 128]} />
-                <meshBasicMaterial color={index === 1 ? '#b38cff' : '#63dfff'} transparent opacity={0.42 - index * 0.08} />
-              </mesh>
-            ))}
-            <Text position={[0, -1.28, 0]} fontSize={0.11} color="#73e5ff" anchorX="center" letterSpacing={0.08}>ALI / DIGITAL IDENTITY</Text>
-          </group>
-        </Float>
-
-        {projects.map((project) => (
-          <ProjectPanel key={project.id} project={project} active={active === project.id} onSelect={() => onSelect(project.id)} />
-        ))}
-
-        {starPositions.map((position, index) => (
-          <mesh key={index} position={position}>
-            <sphereGeometry args={[0.018 + (index % 3) * 0.008, 6, 6]} />
-            <meshBasicMaterial color={index % 4 === 0 ? '#c5a4ff' : '#71ddff'} transparent opacity={0.55} />
-          </mesh>
-        ))}
-
-        <Sparkles count={reduced ? 35 : 110} scale={11} size={0.9} speed={reduced ? 0 : 0.18} color="#74ddff" />
-
-        {/* Connecting beams make the projects feel like one system. */}
-        {projects.map((project, index) => (
-          <Line key={`beam-${project.id}`} points={[[0, 0.05, 0], project.position]} color={project.color} transparent opacity={active === project.id ? 0.45 : 0.10} lineWidth={active === project.id ? 1.2 : 0.45} />
-        ))}
-      </group>
-
-      <OrbitControls enableZoom={false} enablePan={false} autoRotate={!reduced} autoRotateSpeed={0.12} minPolarAngle={Math.PI / 2.65} maxPolarAngle={Math.PI / 1.7} />
-    </>
-  )
+      <Ship position={[-3.5, 2.25, -1.5]} />
+      <Ship position={[3.65, -0.1, -4.1]} />
+      <Planet position={[-6.0, 2.7, -5.2]} color="#234e70" size={0.95} />
+      <Planet position={[6.0, 2.9, -6.2]} color="#593b70" size={1.35} />
+      <Planet position={[5.8, -1.65, -6.4]} color="#5f492c" size={0.65} ring={false} />
+      <Portal position={[-2.35, 2.65, -4.3]} color="#70e8ff" label="EDUCATION" />
+      <Portal position={[2.35, 2.65, -4.3]} color="#ff9fbe" label="CONTACT" />
+      <AsteroidField />
+      <ProjectDock active={activeProject} onSelect={setActiveProject} />
+      {zones.map((zone) => <group key={zone.id} position={zone.position}><Text fontSize={0.09} color={zone.color} anchorX="center" letterSpacing={0.09}>{zone.label}</Text><Text position={[0, -0.18, 0]} fontSize={0.055} color="#91a1b7" anchorX="center">{zone.title}</Text></group>)}
+      <Sparkles count={reduced ? 45 : 170} scale={14} size={1.05} speed={reduced ? 0 : 0.2} color="#78ddff" />
+    </group>
+    <OrbitControls enableZoom={false} enablePan={false} autoRotate={!reduced} autoRotateSpeed={0.12} minPolarAngle={Math.PI / 2.9} maxPolarAngle={Math.PI / 1.65} />
+  </>
 }
 
 export function SpaceProfile() {
   const [entered, setEntered] = useState(false)
-  const [active, setActive] = useState('autismart')
+  const [activeProject, setActiveProject] = useState(0)
   const [reduced, setReduced] = useState(false)
   const [command, setCommand] = useState('')
-  const current = projects.find((project) => project.id === active) ?? projects[0]
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)')
     const update = () => setReduced(query.matches)
-    update()
-    query.addEventListener('change', update)
+    update(); query.addEventListener('change', update)
     return () => query.removeEventListener('change', update)
   }, [])
 
-  function runCommand(value: string) {
-    const query = value.toLowerCase().trim()
-    const project = projects.find((item) => query.includes(item.id))
-    if (project) setActive(project.id)
-    const section = sections.find((item) => query.includes(item[0].toLowerCase()))
-    if (section) document.querySelector(section[2])?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
+  const runCommand = (value: string) => {
+    const q = value.toLowerCase().trim()
+    const index = projects.findIndex(([name]) => q.includes(name.toLowerCase()))
+    if (index >= 0) setActiveProject(index)
+    const zone = zones.find((item) => q.includes(item.id) || q.includes(item.label.toLowerCase()))
+    if (zone) document.querySelector(`#${zone.id}`)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
     setCommand('')
   }
 
-  return (
-    <section className={`immersive-profile ${entered ? 'is-entered' : 'is-landing'}`} aria-label="Immersive portfolio for Syed Muhammad Ali Naqvi">
-      <div className="immersive-vignette" />
-      <div className="immersive-topbar">
-        <a href="#top" className="immersive-brand"><span>SA</span><b>SYED MUHAMMAD ALI NAQVI</b></a>
-        <span className="immersive-status"><i /> AVAILABLE · 2026</span>
-      </div>
+  const current = projects[activeProject]
 
-      <div className="immersive-canvas" aria-hidden={!entered}>
-        <Canvas camera={{ position: [0, 1.15, 9.6], fov: 47 }} dpr={[1, 1.45]}>
-          <Scene active={active} onSelect={setActive} reduced={reduced} />
-        </Canvas>
-      </div>
+  return <section id="top" className={`immersive-profile ${entered ? 'is-entered' : 'is-landing'}`} aria-label="Immersive portfolio for Syed Muhammad Ali Naqvi">
+    <div className="immersive-vignette" />
+    <div className="immersive-topbar"><a href="#top" className="immersive-brand"><span>SA</span><b>SYED MUHAMMAD ALI NAQVI</b></a><span className="immersive-status"><i /> AVAILABLE · 2026</span></div>
+    <div className="immersive-canvas"><Canvas camera={{ position: [0, 1.15, 10], fov: 46 }} dpr={[1, 1.5]}><World activeProject={activeProject} setActiveProject={setActiveProject} reduced={reduced} /></Canvas></div>
 
-      {!entered && (
-        <div className="immersive-landing">
-          <div className="immersive-kicker">FULL-STACK DEVELOPER · AI BUILDER · FAST-NUCES GRADUATE</div>
-          <h1>Syed Muhammad<br /><em>Ali Naqvi.</em></h1>
-          <p>Step into the space where I keep the systems I have built, the problems they solve, and the engineering behind them.</p>
-          <div className="immersive-actions">
-            <button type="button" onClick={() => setEntered(true)}>ENTER MY SPACE <span>↗</span></button>
-            <a href="#about">Skip to portfolio</a>
-          </div>
-          <small>Move your pointer to feel the depth · Drag to explore</small>
-        </div>
-      )}
-
-      {entered && (
-        <>
-          <div className="immersive-project-info">
-            <span>01 / ACTIVE PROJECT</span>
-            <strong>{current.name}</strong>
-            <b>{current.type}</b>
-            <p>{current.detail}</p>
-            <small>{current.result}</small>
-            <a href={current.link} target="_blank" rel="noopener noreferrer">OPEN PROJECT ↗</a>
-          </div>
-
-          <nav className="immersive-nav" aria-label="Portfolio sections">
-            {sections.map(([label, detail, href]) => <a key={label} href={href}><span>{label}</span><small>{detail}</small></a>)}
-          </nav>
-
-          <form className="immersive-command" onSubmit={(event) => { event.preventDefault(); runCommand(command) }}>
-            <span>⌘</span>
-            <input aria-label="Navigate portfolio" value={command} onChange={(event) => setCommand(event.target.value)} placeholder="projects / autismart / education / contact" />
-          </form>
-
-          <button className="immersive-exit" type="button" onClick={() => setEntered(false)}>EXIT SPACE</button>
-          <div className="immersive-hint">DRAG TO ORBIT · CLICK A PROJECT PANEL</div>
-        </>
-      )}
-
-      <style>{`
-        .immersive-profile{position:relative;isolation:isolate;height:100svh;min-height:720px;overflow:hidden;background:#040711;color:#f4f7fb}
-        .immersive-profile::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(circle at 50% 44%,rgba(54,175,220,.12),transparent 24%),radial-gradient(circle at 72% 22%,rgba(143,103,255,.11),transparent 28%),linear-gradient(180deg,#07101d 0%,#040711 65%,#02040a 100%);pointer-events:none}
-        .immersive-vignette{position:absolute;inset:0;z-index:3;pointer-events:none;background:radial-gradient(circle,transparent 38%,rgba(1,3,8,.52) 100%);mix-blend-mode:multiply}
-        .immersive-canvas{position:absolute;inset:0;z-index:1;transition:transform 1.1s cubic-bezier(.2,.8,.2,1),opacity 900ms ease;transform:scale(1)}
-        .is-landing .immersive-canvas{opacity:.72;transform:scale(1.04)}
-        .immersive-canvas canvas{display:block}
-        .immersive-topbar{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:24px 34px;border-bottom:1px solid rgba(255,255,255,.09);background:linear-gradient(180deg,rgba(3,7,15,.72),rgba(3,7,15,0));backdrop-filter:blur(8px)}
-        .immersive-brand{display:flex;align-items:center;gap:12px;font-family:var(--font-mono),monospace;font-size:10px;letter-spacing:.14em}.immersive-brand span{display:grid;place-items:center;width:31px;height:31px;border:1px solid #78ddff;color:#78ddff;box-shadow:0 0 24px rgba(91,217,255,.16)}.immersive-brand b{font-weight:500}.immersive-status{font-family:var(--font-mono),monospace;font-size:9px;letter-spacing:.12em;color:rgba(235,243,255,.58)}.immersive-status i{display:inline-block;width:6px;height:6px;margin-right:8px;border-radius:50%;background:#b7ed8a;box-shadow:0 0 12px #b7ed8a}
-        .immersive-landing{position:relative;z-index:4;display:flex;flex-direction:column;justify-content:center;width:min(690px,calc(100% - 48px));height:100%;margin-inline:auto;text-align:center;pointer-events:none}.immersive-landing>*{pointer-events:auto}.immersive-kicker{color:#79dfff;font-family:var(--font-mono),monospace;font-size:10px;letter-spacing:.18em}.immersive-landing h1{margin:24px 0 20px;max-width:none;font-size:clamp(4.1rem,9vw,8.2rem);font-weight:500;line-height:.88;letter-spacing:-.075em;text-shadow:0 16px 60px rgba(0,0,0,.48)}.immersive-landing h1 em{color:#d4b5ff;font-style:normal}.immersive-landing p{max-width:510px;margin:0 auto;color:rgba(235,242,255,.68);font-size:16px;line-height:1.7}.immersive-actions{display:flex;justify-content:center;align-items:center;gap:20px;margin-top:30px}.immersive-actions button{padding:14px 18px;border:1px solid #78ddff;background:rgba(77,201,255,.12);color:#eaf9ff;font-family:var(--font-mono),monospace;font-size:10px;letter-spacing:.12em;cursor:pointer;box-shadow:0 0 36px rgba(67,205,255,.12);transition:transform .2s ease,background .2s ease}.immersive-actions button:hover{transform:translateY(-3px);background:rgba(77,201,255,.2)}.immersive-actions button span{margin-left:16px;color:#78ddff}.immersive-actions a{color:rgba(235,242,255,.52);font-family:var(--font-mono),monospace;font-size:9px}.immersive-landing small{margin-top:24px;color:rgba(235,242,255,.34);font-family:var(--font-mono),monospace;font-size:9px;letter-spacing:.08em}
-        .immersive-project-info{position:absolute;left:34px;bottom:34px;z-index:5;width:310px;padding:18px 20px;border:1px solid rgba(120,221,255,.22);background:rgba(4,9,19,.7);backdrop-filter:blur(18px);box-shadow:0 18px 70px rgba(0,0,0,.34)}.immersive-project-info span{color:#79dfff;font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.15em}.immersive-project-info strong{display:block;margin-top:8px;font-size:27px;letter-spacing:-.04em}.immersive-project-info b{display:block;margin-top:2px;color:#c7a9ff;font-family:var(--font-mono),monospace;font-size:9px;letter-spacing:.12em}.immersive-project-info p{margin:12px 0 7px;color:rgba(235,242,255,.62);font-size:11px;line-height:1.55}.immersive-project-info small{display:block;color:rgba(235,242,255,.78);font-size:9px}.immersive-project-info a{display:inline-block;margin-top:14px;color:#79dfff;font-family:var(--font-mono),monospace;font-size:9px;letter-spacing:.1em}
-        .immersive-nav{position:absolute;right:34px;bottom:34px;z-index:5;display:grid;width:185px;gap:1px}.immersive-nav a{display:grid;gap:3px;padding:10px 12px;border:1px solid rgba(255,255,255,.08);background:rgba(4,9,19,.58);backdrop-filter:blur(12px);transition:transform .2s ease,border-color .2s ease,background .2s ease}.immersive-nav a:hover{transform:translateX(-5px);border-color:rgba(120,221,255,.4);background:rgba(20,37,61,.72)}.immersive-nav span{color:#79dfff;font-family:var(--font-mono),monospace;font-size:9px;letter-spacing:.12em}.immersive-nav small{color:rgba(235,242,255,.42);font-size:9px}
-        .immersive-command{position:absolute;left:50%;bottom:28px;z-index:6;display:flex;align-items:center;gap:10px;width:min(340px,calc(100% - 40px));padding:10px 13px;transform:translateX(-50%);border:1px solid rgba(199,169,255,.3);background:rgba(4,9,19,.76);backdrop-filter:blur(16px);box-shadow:0 0 40px rgba(122,93,255,.08)}.immersive-command span{color:#c7a9ff;font-family:var(--font-mono),monospace}.immersive-command input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#eef6ff;font-family:var(--font-mono),monospace;font-size:9px}.immersive-command input::placeholder{color:rgba(235,242,255,.34)}
-        .immersive-exit{position:absolute;top:88px;right:34px;z-index:6;padding:7px 10px;border:1px solid rgba(255,255,255,.1);background:rgba(4,9,19,.42);color:rgba(235,242,255,.54);font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.1em;cursor:pointer}.immersive-exit:hover{color:#79dfff;border-color:rgba(120,221,255,.4)}.immersive-hint{position:absolute;left:50%;top:104px;z-index:5;transform:translateX(-50%);color:rgba(235,242,255,.3);font-family:var(--font-mono),monospace;font-size:8px;letter-spacing:.13em;pointer-events:none}
-        @media (prefers-reduced-motion:reduce){.immersive-canvas{transition:none}.immersive-actions button:hover,.immersive-nav a:hover{transform:none}}
-        @media (max-width:760px){.immersive-profile{min-height:680px}.immersive-topbar{padding:16px}.immersive-brand b{display:none}.immersive-status{font-size:7px}.immersive-landing{width:calc(100% - 30px)}.immersive-landing h1{font-size:4rem}.immersive-landing p{font-size:13px}.immersive-actions{flex-direction:column;gap:14px}.immersive-project-info{left:15px;bottom:74px;width:calc(100% - 30px);padding:14px}.immersive-project-info strong{font-size:22px}.immersive-nav{right:15px;top:82px;bottom:auto;width:126px}.immersive-nav a{padding:7px 9px}.immersive-nav small{display:none}.immersive-command{bottom:16px}.immersive-exit{top:55px;right:15px}.immersive-hint{display:none}}
-      `}</style>
-    </section>
-  )
+    {!entered ? <div className="immersive-landing"><div className="immersive-kicker">FULL-STACK DEVELOPER · AI BUILDER · FAST-NUCES GRADUATE</div><h1>Syed Muhammad<br /><em>Ali Naqvi.</em></h1><p>Step into my digital universe — systems, projects, engineering and the work behind them.</p><div className="immersive-actions"><button type="button" onClick={() => setEntered(true)}>ENTER MY UNIVERSE <span>↗</span></button><a href="#about">Skip to portfolio</a></div><small>Drag to orbit · Click a project constellation · Explore the space</small></div> : <>
+      <div className="immersive-project-info"><span>PROJECT CONSTELLATION</span><strong>{current[0]}</strong><b>{current[1]}</b><p>{current[2]}</p><a href={current[3]} target="_blank" rel="noopener noreferrer">OPEN PROJECT ↗</a></div>
+      <nav className="immersive-nav" aria-label="Portfolio sections">{zones.map((zone) => <a key={zone.id} href={`#${zone.id}`}><span>{zone.label}</span><small>{zone.title}</small></a>)}</nav>
+      <form className="immersive-command" onSubmit={(e) => { e.preventDefault(); runCommand(command) }}><span>⌘</span><input aria-label="Navigate portfolio" value={command} onChange={(e) => setCommand(e.target.value)} placeholder="autismart / projects / skills / contact" /></form>
+      <button className="immersive-exit" type="button" onClick={() => setEntered(false)}>EXIT UNIVERSE</button><div className="immersive-hint">DRAG TO ORBIT · EXPLORE THE WORLD · CLICK PROJECTS</div>
+    </>}
+  </section>
 }
