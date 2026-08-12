@@ -3,7 +3,29 @@
   --space-cyan: #73e5ff;
   --space-violet: #b38cff;
   --space-amber: #f5c77a;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(58,184,255,.075), transparent 26%),
+    radial-gradient(circle at 15% 22%, rgba(179,140,255,.055), transparent 24%),
+    radial-gradient(circle at 85% 72%, rgba(245,199,122,.035), transparent 20%);
   box-shadow: inset 0 0 180px rgba(0,0,0,.72);
+}
+.immersive-profile::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .55;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(115,229,255,.16) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 22%, rgba(179,140,255,.13) 0 1px, transparent 2px),
+    radial-gradient(circle at 45% 76%, rgba(245,199,122,.1) 0 1px, transparent 2px),
+    radial-gradient(circle at 90% 58%, rgba(115,229,255,.12) 0 1px, transparent 2px);
+  background-size: 210px 190px, 270px 230px, 320px 260px, 250px 210px;
+  animation: cosmic-drift 28s linear infinite;
 }
 .immersive-profile::after {
   content: '';
@@ -13,21 +35,27 @@
   pointer-events: none;
   background:
     linear-gradient(90deg, rgba(115,229,255,.025) 1px, transparent 1px),
-    linear-gradient(rgba(115,229,255,.018) 1px, transparent 1px);
-  background-size: 120px 120px;
-  mask-image: linear-gradient(to bottom, transparent, black 22%, black 78%, transparent);
+    linear-gradient(rgba(115,229,255,.018) 1px, transparent 1px),
+    linear-gradient(to bottom, transparent 0%, rgba(255,255,255,.018) 50%, transparent 100%);
+  background-size: 120px 120px, 120px 120px, 100% 5px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
 }
 .immersive-canvas {
-  filter: saturate(1.08) contrast(1.04);
+  position: relative;
+  z-index: 0;
+  filter: saturate(1.1) contrast(1.05);
   transform: scale(1.015);
+  transition: transform 900ms cubic-bezier(.2,.75,.2,1), filter 700ms ease, opacity 700ms ease;
 }
 .immersive-profile.is-entered .immersive-canvas {
   transform: scale(1.035);
+  filter: saturate(1.16) contrast(1.07);
 }
 .immersive-profile.is-landing .immersive-canvas {
-  opacity: .62;
-  filter: saturate(.85) contrast(1.08) brightness(.72);
+  opacity: .68;
+  filter: saturate(.88) contrast(1.08) brightness(.72);
 }
+.immersive-profile.is-entered::before { opacity: .7; }
 .immersive-landing {
   text-shadow: 0 4px 34px rgba(0,0,0,.65);
 }
@@ -49,21 +77,33 @@
 .immersive-project-info,
 .immersive-nav,
 .immersive-command {
+  position: relative;
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
   box-shadow: 0 20px 80px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.055);
+}
+.immersive-project-info::before,
+.immersive-nav::before,
+.immersive-command::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(115,229,255,.035), transparent 40%, rgba(179,140,255,.025));
 }
 .immersive-project-info {
   border-color: rgba(115,229,255,.2) !important;
   background: linear-gradient(145deg, rgba(7,17,31,.78), rgba(4,7,17,.48)) !important;
 }
 .immersive-nav a {
-  transition: transform .2s ease, color .2s ease, border-color .2s ease, background .2s ease;
+  transition: transform .2s ease, color .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
 }
 .immersive-nav a:hover {
   transform: translateX(4px);
   border-color: rgba(115,229,255,.3) !important;
   background: rgba(115,229,255,.045);
+  box-shadow: 0 0 24px rgba(115,229,255,.055);
 }
 .immersive-command:focus-within {
   border-color: rgba(115,229,255,.4) !important;
@@ -72,14 +112,20 @@
 .immersive-exit:hover {
   border-color: rgba(245,199,122,.45) !important;
   color: #f5c77a !important;
+  box-shadow: 0 0 26px rgba(245,199,122,.08);
+}
+@keyframes cosmic-drift {
+  from { transform: translate3d(0,0,0) rotate(0deg); }
+  to { transform: translate3d(2%, -1.5%, 0) rotate(2deg); }
 }
 @media (max-width: 760px) {
   .immersive-profile { min-height: 640px; }
-  .immersive-profile::after { background-size: 72px 72px; }
+  .immersive-profile::after { background-size: 72px 72px, 72px 72px, 100% 5px; }
   .immersive-canvas { transform: scale(1.01); }
   .immersive-profile.is-entered .immersive-canvas { transform: scale(1.015); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .immersive-profile::before { animation: none; }
   .immersive-canvas,
   .immersive-profile.is-entered .immersive-canvas { transform: none; }
 }
