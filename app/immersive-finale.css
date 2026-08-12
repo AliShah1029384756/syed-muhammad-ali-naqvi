@@ -1,0 +1,85 @@
+/* Final cinematic layer for the immersive portfolio */
+.immersive-profile {
+  --space-cyan: #73e5ff;
+  --space-violet: #b38cff;
+  --space-amber: #f5c77a;
+  box-shadow: inset 0 0 180px rgba(0,0,0,.72);
+}
+.immersive-profile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(115,229,255,.025) 1px, transparent 1px),
+    linear-gradient(rgba(115,229,255,.018) 1px, transparent 1px);
+  background-size: 120px 120px;
+  mask-image: linear-gradient(to bottom, transparent, black 22%, black 78%, transparent);
+}
+.immersive-canvas {
+  filter: saturate(1.08) contrast(1.04);
+  transform: scale(1.015);
+}
+.immersive-profile.is-entered .immersive-canvas {
+  transform: scale(1.035);
+}
+.immersive-profile.is-landing .immersive-canvas {
+  opacity: .62;
+  filter: saturate(.85) contrast(1.08) brightness(.72);
+}
+.immersive-landing {
+  text-shadow: 0 4px 34px rgba(0,0,0,.65);
+}
+.immersive-landing h1 {
+  letter-spacing: -.065em !important;
+  font-weight: 460 !important;
+}
+.immersive-landing h1 em {
+  background: linear-gradient(110deg, #73e5ff 10%, #b38cff 55%, #f5c77a 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+.immersive-kicker {
+  color: rgba(220,239,255,.68) !important;
+  letter-spacing: .18em !important;
+}
+.immersive-project-info,
+.immersive-nav,
+.immersive-command {
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  box-shadow: 0 20px 80px rgba(0,0,0,.28), inset 0 1px rgba(255,255,255,.055);
+}
+.immersive-project-info {
+  border-color: rgba(115,229,255,.2) !important;
+  background: linear-gradient(145deg, rgba(7,17,31,.78), rgba(4,7,17,.48)) !important;
+}
+.immersive-nav a {
+  transition: transform .2s ease, color .2s ease, border-color .2s ease, background .2s ease;
+}
+.immersive-nav a:hover {
+  transform: translateX(4px);
+  border-color: rgba(115,229,255,.3) !important;
+  background: rgba(115,229,255,.045);
+}
+.immersive-command:focus-within {
+  border-color: rgba(115,229,255,.4) !important;
+  box-shadow: 0 0 40px rgba(115,229,255,.08), inset 0 1px rgba(255,255,255,.08);
+}
+.immersive-exit:hover {
+  border-color: rgba(245,199,122,.45) !important;
+  color: #f5c77a !important;
+}
+@media (max-width: 760px) {
+  .immersive-profile { min-height: 640px; }
+  .immersive-profile::after { background-size: 72px 72px; }
+  .immersive-canvas { transform: scale(1.01); }
+  .immersive-profile.is-entered .immersive-canvas { transform: scale(1.015); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .immersive-canvas,
+  .immersive-profile.is-entered .immersive-canvas { transform: none; }
+}
