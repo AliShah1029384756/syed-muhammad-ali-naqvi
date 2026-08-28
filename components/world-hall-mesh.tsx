@@ -41,11 +41,12 @@ function Hall({ focusId }: { focusId: string | null }) {
   }, [])
 
   const discs = [
-    { y: 0.38, r: 0.72, h: 0.06 },
-    { y: 0.62, r: 0.58, h: 0.055 },
-    { y: 0.84, r: 0.44, h: 0.05 },
-    { y: 1.04, r: 0.3, h: 0.045 },
-    { y: 1.22, r: 0.18, h: 0.04 },
+    { y: 0.52, r: 0.78, h: 0.07 },
+    { y: 0.78, r: 0.64, h: 0.065 },
+    { y: 1.02, r: 0.5, h: 0.06 },
+    { y: 1.24, r: 0.36, h: 0.055 },
+    { y: 1.44, r: 0.22, h: 0.05 },
+    { y: 1.6, r: 0.12, h: 0.04 },
   ]
 
   return (
@@ -108,31 +109,49 @@ function Hall({ focusId }: { focusId: string | null }) {
       <pointLight position={[-3, 1.8, -2]} intensity={2.2} distance={10} color="#b8c4d4" />
 
       <group ref={axis}>
-        <mesh position={[0, 0.12, 0]} castShadow>
-          <cylinderGeometry args={[0.95, 1.05, 0.22, 32]} />
-          <meshStandardMaterial color="#1a1f2a" roughness={0.7} metalness={0.2} />
+        <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[1.15, 1.25, 0.2, 40]} />
+          <meshStandardMaterial color="#171c28" roughness={0.68} metalness={0.22} />
         </mesh>
-        <mesh position={[0, 0.28, 0]}>
-          <cylinderGeometry args={[0.08, 0.08, 1.2, 12]} />
-          <meshStandardMaterial color="#2a303c" roughness={0.4} metalness={0.55} />
+        <mesh position={[0, 0.28, 0]} castShadow>
+          <cylinderGeometry args={[0.98, 1.05, 0.16, 40]} />
+          <meshStandardMaterial color="#1e2430" roughness={0.55} metalness={0.28} />
+        </mesh>
+        <mesh position={[0, 0.95, 0]}>
+          <cylinderGeometry args={[0.055, 0.055, 1.55, 12]} />
+          <meshStandardMaterial color="#2e3644" roughness={0.35} metalness={0.55} />
+        </mesh>
+        <mesh position={[0, 1.78, 0]}>
+          <sphereGeometry args={[0.07, 16, 16]} />
+          <meshStandardMaterial
+            color="#d8cfc2"
+            roughness={0.25}
+            metalness={0.45}
+            emissive="#cfc6b8"
+            emissiveIntensity={0.08}
+          />
         </mesh>
         {discs.map((d, i) => (
           <mesh key={i} position={[0, d.y, 0]} castShadow>
-            <cylinderGeometry args={[d.r, d.r, d.h, 32]} />
+            <cylinderGeometry args={[d.r, d.r * 0.98, d.h, 40]} />
             <meshStandardMaterial
-              color="#e4ddd2"
-              metalness={0.35}
-              roughness={0.22}
+              color={i % 2 === 0 ? '#e6dfd4' : '#d4cdc2'}
+              metalness={0.28}
+              roughness={0.28}
               emissive="#cfc6b8"
-              emissiveIntensity={0.12}
+              emissiveIntensity={0.08 + i * 0.012}
             />
           </mesh>
         ))}
       </group>
 
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.015, 0]}>
-        <circleGeometry args={[1.5, 40]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.45} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.018, 0]}>
+        <circleGeometry args={[1.55, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.5} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]} receiveShadow>
+        <ringGeometry args={[1.35, 2.15, 64]} />
+        <meshStandardMaterial color="#161b26" roughness={0.78} metalness={0.12} />
       </mesh>
 
       {openings.map((o) => (
