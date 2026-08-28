@@ -32,7 +32,7 @@ function Hall({ focusId, stageId, clinicStageId, iepStageId }: { focusId: string
       axis.current.position.y = Math.sin(t * 0.32) * 0.012
     }
     if (oculus.current) {
-      oculus.current.rotation.y = t * 0.018
+      oculus.current.rotation.y = t * 0.008
     }
     if (sweepLight.current) {
       sweepLight.current.position.x = Math.sin(t * 0.08) * 4.5
@@ -56,12 +56,12 @@ function Hall({ focusId, stageId, clinicStageId, iepStageId }: { focusId: string
   }), [])
 
   const discs = [
-    { y: 0.52, r: 0.78, h: 0.07 },
-    { y: 0.78, r: 0.64, h: 0.065 },
-    { y: 1.02, r: 0.5, h: 0.06 },
-    { y: 1.24, r: 0.36, h: 0.055 },
-    { y: 1.44, r: 0.22, h: 0.05 },
-    { y: 1.6, r: 0.12, h: 0.04 },
+    { y: 0.48, r: 0.88, h: 0.08 },
+    { y: 0.74, r: 0.72, h: 0.072 },
+    { y: 0.98, r: 0.56, h: 0.065 },
+    { y: 1.2, r: 0.4, h: 0.058 },
+    { y: 1.4, r: 0.26, h: 0.05 },
+    { y: 1.58, r: 0.14, h: 0.042 },
   ]
 
   return (
@@ -154,48 +154,84 @@ function Hall({ focusId, stageId, clinicStageId, iepStageId }: { focusId: string
         <circleGeometry args={[0.2, 20]} />
         <meshBasicMaterial color="#f0dcc0" />
       </mesh>
-      <pointLight position={[0, 3.75, 0]} intensity={26} distance={14} decay={2} color="#f0e2cc" castShadow />
-      <pointLight ref={sweepLight} position={[4.5, 2.6, 0]} intensity={0.65} distance={9} decay={2} color="#b7c4d3" />
-      <pointLight position={[3.2, 2.0, 3.8]} intensity={2.8} distance={11} color="#c8d0dc" />
-      <pointLight position={[-3.4, 1.7, -2.4]} intensity={1.8} distance={10} color="#a8b4c4" />
-      <pointLight position={[0, 2.4, -4]} intensity={1.4} distance={9} color="#d8d0c0" />
+      <pointLight position={[0, 3.75, 0]} intensity={30} distance={12} decay={2} color="#f2e4cc" castShadow />
+      <spotLight
+        position={[0, 3.9, 0]}
+        angle={0.38}
+        penumbra={0.55}
+        intensity={18}
+        distance={9}
+        decay={2}
+        color="#f5ebd8"
+        castShadow
+      />
+      <pointLight ref={sweepLight} position={[4.5, 2.6, 0]} intensity={0.45} distance={9} decay={2} color="#b7c4d3" />
+      <pointLight position={[3.2, 2.0, 3.8]} intensity={2.0} distance={11} color="#c8d0dc" />
+      <pointLight position={[-3.4, 1.7, -2.4]} intensity={1.35} distance={10} color="#a8b4c4" />
+      <pointLight position={[0, 2.4, -4]} intensity={1.0} distance={9} color="#d8d0c0" />
 
       <group ref={axis}>
-        <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[1.15, 1.25, 0.2, 40]} />
-          <meshStandardMaterial color="#171c28" roughness={0.68} metalness={0.22} />
+        <mesh position={[0, 0.08, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[1.28, 1.38, 0.16, 48]} />
+          <meshStandardMaterial color="#12161f" roughness={0.72} metalness={0.18} />
         </mesh>
-        <mesh position={[0, 0.28, 0]} castShadow>
-          <cylinderGeometry args={[0.98, 1.05, 0.16, 40]} />
-          <meshStandardMaterial color="#1e2430" roughness={0.55} metalness={0.28} />
+        <mesh position={[0, 0.22, 0]} castShadow>
+          <cylinderGeometry args={[1.08, 1.18, 0.14, 48]} />
+          <meshStandardMaterial color="#1a2030" roughness={0.55} metalness={0.28} />
         </mesh>
-        <mesh position={[0, 0.95, 0]}>
-          <cylinderGeometry args={[0.055, 0.055, 1.55, 12]} />
-          <meshStandardMaterial color="#2e3644" roughness={0.35} metalness={0.55} />
+        <mesh position={[0, 0.34, 0]} castShadow>
+          <cylinderGeometry args={[0.92, 0.98, 0.1, 40]} />
+          <meshStandardMaterial color={BRASS} roughness={0.4} metalness={0.55} />
         </mesh>
-        <mesh position={[0, 1.78, 0]}>
-          <sphereGeometry args={[0.07, 16, 16]} />
-          <meshStandardMaterial color="#d8cfc2" roughness={0.25} metalness={0.45} emissive="#cfc6b8" emissiveIntensity={0.08} />
+        <mesh position={[0, 1.0, 0]}>
+          <cylinderGeometry args={[0.07, 0.07, 1.7, 16]} />
+          <meshStandardMaterial color="#2a323f" roughness={0.32} metalness={0.62} />
         </mesh>
         {discs.map((d, i) => (
-          <mesh key={i} position={[0, d.y, 0]} castShadow>
-            <cylinderGeometry args={[d.r, d.r * 0.98, d.h, 40]} />
-            <meshStandardMaterial color={i % 2 === 0 ? IVORY : '#c8c0b5'} metalness={0.28} roughness={0.28} emissive="#cfc6b8" emissiveIntensity={0.08 + i * 0.012} />
-          </mesh>
+          <group key={i} position={[0, d.y, 0]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[d.r, d.r * 0.97, d.h, 48]} />
+              <meshStandardMaterial
+                color={i % 2 === 0 ? IVORY : '#c4bcb0'}
+                metalness={0.32}
+                roughness={0.24}
+                emissive="#cfc6b8"
+                emissiveIntensity={0.1 + i * 0.014}
+              />
+            </mesh>
+            <mesh position={[0, d.h * 0.55, 0]}>
+              <cylinderGeometry args={[d.r * 0.92, d.r * 0.92, 0.012, 48]} />
+              <meshStandardMaterial color={BRASS} roughness={0.35} metalness={0.6} />
+            </mesh>
+          </group>
         ))}
-        <mesh position={[0, 1.9, 0]}>
-          <boxGeometry args={[0.06, 0.06, 0.06]} />
-          <meshBasicMaterial color="#f0dfc1" />
+        <mesh position={[0, 1.82, 0]}>
+          <sphereGeometry args={[0.09, 20, 20]} />
+          <meshStandardMaterial
+            color="#e4dccf"
+            roughness={0.22}
+            metalness={0.5}
+            emissive="#cfc6b8"
+            emissiveIntensity={0.14}
+          />
+        </mesh>
+        <mesh position={[0, 1.95, 0]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.08, 12]} />
+          <meshStandardMaterial color={BRASS} roughness={0.3} metalness={0.65} />
         </mesh>
       </group>
 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.018, 0]}>
-        <circleGeometry args={[1.55, 48]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.5} />
+        <circleGeometry args={[1.7, 48]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.55} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, 0]} receiveShadow>
-        <ringGeometry args={[1.35, 2.15, 64]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]} receiveShadow>
+        <ringGeometry args={[1.45, 2.35, 64]} />
         <meshStandardMaterial color="#161b26" roughness={0.78} metalness={0.12} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+        <ringGeometry args={[1.32, 1.38, 64]} />
+        <meshStandardMaterial color={BRASS} roughness={0.4} metalness={0.5} />
       </mesh>
 
       {openings.map((o) => <Opening key={o.id} zone={o} active={focusId === o.id} />)}
