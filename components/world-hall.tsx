@@ -152,6 +152,7 @@ function MobileStage({
 
 export function WorldHall() {
   const [entered, setEntered] = useState(false)
+  const [worldUi, setWorldUi] = useState(false)
   const [focus, setFocus] = useState<string | null>(null)
   const [stageId, setStageId] = useState<StageId | null>(null)
   const [clinicStageId, setClinicStageId] = useState<ClinicStageId | null>(null)
@@ -172,12 +173,20 @@ export function WorldHall() {
   }, [])
 
   useEffect(() => {
-    if (!entered) return
+    if (!entered) {
+      setWorldUi(false)
+      return
+    }
+    // Let the camera begin its settle before the zone chrome appears.
+    const t = setTimeout(() => setWorldUi(true), 520)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { setFocus(null); setStageId(null); setClinicStageId(null); setIepStageId(null) }
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [entered])
 
   const focusAngle = focus ? ZONES.find((z) => z.id === focus)?.angle ?? null : null
@@ -257,40 +266,54 @@ export function WorldHall() {
               </section>
             ) : (
               <>
-                <nav className="zone-nav" aria-label="World zones">
-                  {ZONES.map((z) => (
-                    <button
-                      key={z.id}
-                      type="button"
-                      className={focus === z.id ? 'active' : ''}
-                      onClick={() => setFocus(focus === z.id ? null : z.id)}
-                    >
-                      {z.label}
-                    </button>
-                  ))}
+                <nav
+                  className={`zone-nav ${worldUi ? 'is-ready' : ''}`}
+                  aria-label="World zones"
+                  aria-hidden={!worldUi}
+                >
+                  {ZONES.map((z) => {
+                    const flagship = z.id === 'ai' || z.id === 'engineering' || z.id === 'academy'
+                    return (
+                      <button
+                        key={z.id}
+                        type="button"
+                        className={[
+                          focus === z.id ? 'active' : '',
+                          flagship ? 'flagship' : 'secondary',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        onClick={() => setFocus(focus === z.id ? null : z.id)}
+                      >
+                        {z.label}
+                      </button>
+                    )
+                  })}
                 </nav>
-                {activeZone && activeZone.id === 'ai' ? (
-                  <AutiSmartPanel
-                    onClose={() => { setFocus(null); setStageId(null) }}
-                    stageId={stageId}
-                    setStageId={setStageId}
-                  />
-                ) : activeZone && activeZone.id === 'engineering' ? (
-                  <ClinicOSPanel
-                    onClose={() => { setFocus(null); setClinicStageId(null) }}
-                    stageId={clinicStageId}
-                    setStageId={setClinicStageId}
-                  />
-                ) : activeZone && activeZone.id === 'academy' ? (
-                  <SchoolIEPPanel
-                    onClose={() => { setFocus(null); setIepStageId(null) }}
-                    stageId={iepStageId}
-                    setStageId={setIepStageId}
-                  />
-                ) : activeZone ? (
-                  <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
-                ) : (
-                  <p className="hint">Flagships: AI / Healthcare · Engineering · Academy · other zones for context</p>
+                {worldUi && (
+                  activeZone && activeZone.id === 'ai' ? (
+                    <AutiSmartPanel
+                      onClose={() => { setFocus(null); setStageId(null) }}
+                      stageId={stageId}
+                      setStageId={setStageId}
+                    />
+                  ) : activeZone && activeZone.id === 'engineering' ? (
+                    <ClinicOSPanel
+                      onClose={() => { setFocus(null); setClinicStageId(null) }}
+                      stageId={clinicStageId}
+                      setStageId={setClinicStageId}
+                    />
+                  ) : activeZone && activeZone.id === 'academy' ? (
+                    <SchoolIEPPanel
+                      onClose={() => { setFocus(null); setIepStageId(null) }}
+                      stageId={iepStageId}
+                      setStageId={setIepStageId}
+                    />
+                  ) : activeZone ? (
+                    <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
+                  ) : (
+                    <p className="hint is-ready">Flagships: AI / Healthcare · Engineering · Academy · other zones for context</p>
+                  )
                 )}
               </>
             )}
