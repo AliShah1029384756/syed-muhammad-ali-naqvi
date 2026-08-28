@@ -13,33 +13,33 @@ function CameraController({
   focusAngle: number | null
 }) {
   const { camera } = useThree()
-  const start = useRef({ x: 0, y: 3.4, z: 12.5 })
+  const start = useRef({ x: 0, y: 3.85, z: 13.6 })
   const goal = useRef({ x: 0, y: 1.55, z: 6.8 })
-  const look = useRef({ x: 0, y: 0.55, z: 0 })
+  const look = useRef({ x: 0, y: 0.72, z: 0 })
 
   useFrame((_, delta) => {
-    const t = Math.min(delta * 1.35, 1)
+    const t = Math.min(delta * 1.2, 1)
     if (!entered) {
-      camera.position.x += (start.current.x - camera.position.x) * t * 0.55
-      camera.position.y += (start.current.y - camera.position.y) * t * 0.55
-      camera.position.z += (start.current.z - camera.position.z) * t * 0.55
-      look.current.y += (0.55 - look.current.y) * t * 0.5
+      camera.position.x += (start.current.x - camera.position.x) * t * 0.48
+      camera.position.y += (start.current.y - camera.position.y) * t * 0.48
+      camera.position.z += (start.current.z - camera.position.z) * t * 0.48
+      look.current.y += (0.72 - look.current.y) * t * 0.45
       camera.lookAt(0, look.current.y, 0)
       return
     }
 
     let targetX = 0
-    let targetY = 1.4
-    let targetZ = 5.2
+    let targetY = 1.35
+    let targetZ = 4.85
     let lookX = 0
-    let lookY = 0.7
+    let lookY = 0.78
 
     if (focusAngle !== null) {
-      targetX = Math.sin(focusAngle) * 2.1
-      targetZ = 5.2 - Math.cos(focusAngle) * 1.05
-      targetY = 1.25
-      lookX = Math.sin(focusAngle) * 0.55
-      lookY = 0.85
+      targetX = Math.sin(focusAngle) * 2.25
+      targetZ = 4.9 - Math.cos(focusAngle) * 1.15
+      targetY = 1.2
+      lookX = Math.sin(focusAngle) * 0.65
+      lookY = 0.9
     }
 
     goal.current.x += (targetX - goal.current.x) * t
