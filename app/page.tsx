@@ -1,7 +1,7 @@
 'use client'
 
-import { Full3DPortfolio } from '@/components/full-3d-portfolio'
+import { WorldHall } from '@/components/world-hall'
 
 export default function Home() {
-  return <Full3DPortfolio />
+  return <WorldHall />
 }
