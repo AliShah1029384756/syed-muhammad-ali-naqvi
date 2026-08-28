@@ -52,14 +52,14 @@ function Hall({ focusId }: { focusId: string | null }) {
   return (
     <group ref={group}>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow>
-        <circleGeometry args={[9.2, 72]} />
-        <meshStandardMaterial color="#12161f" roughness={0.9} metalness={0.06} />
+        <circleGeometry args={[9.2, 80]} />
+        <meshStandardMaterial color="#10141c" roughness={0.92} metalness={0.04} />
       </mesh>
 
-      {[2.4, 4.1, 5.9, 7.7].map((radius) => (
-        <mesh key={radius} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-          <ringGeometry args={[radius - 0.03, radius + 0.03, 72]} />
-          <meshStandardMaterial color="#1c2430" roughness={0.75} metalness={0.15} />
+      {[2.55, 4.2, 5.95, 7.75].map((radius) => (
+        <mesh key={radius} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.012, 0]}>
+          <ringGeometry args={[radius - 0.025, radius + 0.025, 80]} />
+          <meshStandardMaterial color="#1e2634" roughness={0.7} metalness={0.18} />
         </mesh>
       ))}
 
@@ -79,10 +79,20 @@ function Hall({ focusId }: { focusId: string | null }) {
       </mesh>
 
       {pillars.map((p, i) => (
-        <mesh key={i} position={[p.x, 1.9, p.z]} castShadow>
-          <boxGeometry args={[0.28, 3.8, 0.28]} />
-          <meshStandardMaterial color="#151a24" roughness={0.88} metalness={0.08} />
-        </mesh>
+        <group key={i} position={[p.x, 0, p.z]}>
+          <mesh position={[0, 0.12, 0]} castShadow receiveShadow>
+            <boxGeometry args={[0.42, 0.24, 0.42]} />
+            <meshStandardMaterial color="#1a2030" roughness={0.7} metalness={0.15} />
+          </mesh>
+          <mesh position={[0, 1.95, 0]} castShadow>
+            <boxGeometry args={[0.3, 3.5, 0.3]} />
+            <meshStandardMaterial color="#141a24" roughness={0.86} metalness={0.1} />
+          </mesh>
+          <mesh position={[0, 3.78, 0]} castShadow>
+            <boxGeometry args={[0.4, 0.18, 0.4]} />
+            <meshStandardMaterial color="#1c2432" roughness={0.6} metalness={0.22} />
+          </mesh>
+        </group>
       ))}
 
       <mesh position={[0, 4.2, 0]}>
