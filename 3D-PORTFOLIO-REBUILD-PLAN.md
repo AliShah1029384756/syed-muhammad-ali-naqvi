@@ -1,221 +1,170 @@
-# Immersive 3D Portfolio — Rebuild Plan
+# Immersive 3D Portfolio — Rebuild Plan v2
 
-## 1. Purpose
+## Purpose
 
-This repository will become Ali's immersive, experimental portfolio experience. The existing professional portfolio remains the primary recruiter-facing site and must not be replaced or modified by this project.
+The immersive site is a **style-first creative portfolio experience**. The existing professional portfolio remains the recruiter-facing evidence site. This world exists to make Ali memorable and to demonstrate engineering craft through the experience itself.
 
-**Professional site:** clear, fast, recruiter-first proof.
+## What was wrong with the previous direction
 
-**3D site:** memorable, exploratory, cinematic representation of how Ali builds, teaches, learns, and organizes knowledge.
+The old space/cyberpunk build was visually busy and template-like: neon accents, floating panels, particles, and decorative objects competed for attention. The first rebuild corrected that problem but became too empty: a dark rotunda, central stack, and empty openings did not create enough atmosphere or narrative.
 
-The previous 3D experience is treated as a learning/reference baseline, not as the design to preserve. We will keep useful technical foundations where they reduce risk, but redesign the experience from the ground up.
+**The target is neither cyberpunk nor an empty gallery.**
 
-## 2. Design North Star
+## Art Direction: DIGITAL ATELIER / KNOWLEDGE ARCHIVE
 
-**Feeling:** curiosity + intelligence + calm + ambition + craftsmanship.
+Feeling target:
 
-The experience should feel like entering a carefully designed digital workspace, not a generic cyberpunk demo.
+**curiosity + intelligence + calm + ambition + craftsmanship**
+
+Think of a private digital atelier where software systems, research notes, teaching material, and finished work are preserved as artifacts.
+
+Visual language:
+- deep charcoal / graphite architecture
+- warm ivory / aged-brass accents
+- restrained cool daylight from the upper structure
+- stone, metal, glass and paper-like surfaces
+- strong light falloff and depth
+- asymmetry inside a disciplined architectural shell
+- quiet motion that makes the space feel alive
 
 Avoid:
-- rotating cubes/laptops used only for decoration
-- excessive particles, neon, bloom, or RGB effects
-- long walls of text inside the 3D canvas
-- gimmicky interactions that slow down navigation
-- copying the previous visual composition
+- neon cyberpunk
+- RGB gradients
+- particle/star fields
+- floating UI-card soup
+- decorative laptops/cubes
+- fake futuristic HUDs
+- excessive bloom
+- generic sci-fi portals
 
-Prefer:
-- meaningful objects
-- cinematic camera movement
-- restrained lighting
-- strong typography
-- depth used to establish hierarchy
-- short interactions with clear purpose
-- HTML UI for important readable content
+## Spatial Story
 
-## 3. Core Experience
+### Layer 1 — Arrival
 
-Opening scene:
-- dark, atmospheric digital workspace
-- slow camera reveal
-- Ali's identity appears with minimal copy
-- primary action: `ENTER THE WORLD`
-- secondary action: `PROFESSIONAL PORTFOLIO`
+The visitor enters a real-feeling architectural space, not a UI container.
 
-Conceptual zones:
-1. Engineering Lab — software systems and architecture
-2. AI / Healthcare Lab — AutiSmart and responsible AI work
-3. Academy — teaching, mentoring, and learning resources
-4. Knowledge Archive — curated resources and documentation mindset
-5. Journey — education, projects, teaching, and professional timeline
-6. Career Terminal — CV, GitHub, LinkedIn, contact
+The opening must communicate:
+- Ali's name
+- Full-Stack Software Engineer · Healthcare & EdTech
+- manifesto
+- Enter the world
+- Professional portfolio escape hatch
 
-The visitor can explore, but navigation must never require exploration. A visible navigation layer always provides a direct route.
+### Layer 2 — The Atelier
 
-## 4. Project Storytelling
+The central space contains a meaningful **knowledge/craft axis** plus environmental details that imply a working archive:
+- tiered central plinth
+- six preserved archive plates
+- peripheral shelves / vertical archive ribs
+- ceiling oculus / hanging light structure
+- floor inlays and material transitions
+- subtle animated light and mechanical movement
 
-### AutiSmart — flagship
-Represent the system as an AI/healthcare workspace. Emphasize:
-- team FYP status
-- verified Full-Stack Development & AI Integration contribution
-- multimodal/AI-assisted workflow where supported by project documentation
-- architecture and system flow
-- responsible medical disclaimer
-- direct case-study link
+These elements exist to establish atmosphere, not to display random information.
 
-### ClinicOS
-Represent workflow/data relationships visually. Emphasize:
-- full-stack architecture
-- patients, sessions, treatment/workflow concepts where verified
-- RBAC/JWT and technical decisions
-- direct case-study link
+### Layer 3 — Six Doors
 
-### SchoolIEP
-Represent education/IEP workflow visually. Emphasize:
-- structured records
-- goals/progress/role-aware workflows where verified
-- full-stack architecture
-- direct case-study link
+Six architectural openings form the navigation system:
 
-Other work should appear as supporting depth, not compete with the three primary projects.
+1. Engineering — ClinicOS
+2. AI / Healthcare — AutiSmart
+3. Academy — SchoolIEP
+4. Knowledge — learning/documentation ecosystem
+5. Journey — education → projects → teaching → internship
+6. Career — CV / GitHub / LinkedIn / contact
 
-## 5. Journey
+The visitor can click the zone bar directly; exploration is optional.
 
-Use a restrained chronological path:
-- BSCS / FAST-NUCES
-- university systems and software work
-- teaching and mentoring
-- AutiSmart FYP
-- BSCS graduation
-- Atlas Honda Digital Marketing Internship
-- current transition toward software engineering
+### Layer 4 — Work Comes Alive
 
-No inflated claims or invented dates/metrics.
+The three flagship projects get distinct spatial metaphors:
+- **AutiSmart:** connected assessment → AI → therapy-support pipeline
+- **ClinicOS:** operations/workflow desk with access structure
+- **SchoolIEP:** education planning board with student, goals, parent/collaboration structure
 
-## 6. Content Rules
+These must feel like artifacts/workspaces belonging to the same atelier, not three unrelated demos.
 
-Use the current professional website and verified project repositories as the source of truth.
+## Motion Direction
 
-Never invent:
-- users
-- performance numbers
-- production status
-- clinical validation
-- personal ownership of team features
-- employment titles
-- grades or metrics not already approved for this public experience
+Motion should be slow, intentional and physical:
+- subtle camera breathing
+- slow light movement
+- slight floating/settling of archive plates
+- gentle active-door illumination
+- project artifact reveal on focus
+- cinematic camera glance, never a game-like spin
 
-AutiSmart must remain explicitly a team project with contribution wording consistent with its public documentation.
+No constant object rotation unless it communicates function.
 
-## 7. Technical Direction
+## Interaction Rules
 
-Current repository foundation already includes Next.js, React, TypeScript, Three.js, React Three Fiber, and Drei. Reuse only what is useful; redesign the experience and component structure rather than blindly extending the old UI.
+- Recruiter links are always available.
+- Enter is the primary arrival action.
+- Zone navigation is always visible after entry.
+- Escape closes active project/detail state.
+- Important information remains HTML and keyboard accessible.
+- 3D interaction is enhancement, never a requirement for understanding the portfolio.
 
-Preferred principles:
-- componentized scene architecture
-- lazy-load heavy 3D sections/assets
-- use instancing where appropriate
-- cap device pixel ratio
-- avoid unnecessary per-frame React state updates
-- keep important content outside the WebGL canvas where practical
-- progressive loading
-- graceful error/fallback state
-- mobile 2.5D/lightweight mode
-- accessible HTML controls alongside canvas interactions
+## Responsive Strategy
 
-No paid asset is required for the first version. Prefer procedural geometry, CSS, SVG, and free/open-source assets.
+Desktop: full atelier scene.
 
-## 8. Responsive Strategy
+Tablet: reduced geometry and lighting density.
 
-Desktop: full immersive 3D experience.
+Mobile: intentionally designed 2.5D presentation with the same architecture/story hierarchy; do not shrink desktop WebGL into a tiny viewport.
 
-Tablet: reduced scene complexity and interaction density.
+## Technical Constraints
 
-Mobile: lightweight 2.5D/interactive presentation with the same information architecture. Do not force desktop-scale 3D onto a small screen.
+- Next.js + React + TypeScript + React Three Fiber + Three.js.
+- Procedural geometry first.
+- No paid assets or services required.
+- Keep DPR capped.
+- Avoid unnecessary per-frame React state.
+- Prefer instancing/reusable materials where useful.
+- Keep readable content in HTML.
+- Preserve graceful fallback and reduced-motion behavior.
 
-At every size, provide a direct `Professional Portfolio` route to the stable recruiter-facing site.
+## Implementation Sequence
 
-## 9. Build Phases
+### V2-A — Art direction foundation
+- strengthen materials and environmental depth
+- build ceiling/atelier details
+- enrich peripheral architecture
+- improve arrival composition and typography
 
-### Phase 0 — Foundation
-- inspect existing code
-- define routes and component boundaries
-- define design tokens
-- establish loading/error/fallback states
-- preserve current deployment safety
+**Gate:** the empty hall must already feel like a designed place before adding more project content.
 
-### Phase 1 — World Prototype
-- build one environment
-- camera and lighting
-- central identity object
-- one interaction
-- validate atmosphere before adding content
+### V2-B — Spatial project storytelling
+- keep AutiSmart / ClinicOS / SchoolIEP existing verified content
+- improve their spatial reveal and relationship to their doors
+- do not add unsupported project claims
 
-**Gate:** if the world does not feel compelling with minimal content, redesign before continuing.
+### V2-C — Motion + polish
+- camera choreography
+- active-door transitions
+- subtle environmental motion
+- reduced-motion / keyboard / mobile pass
 
-### Phase 2 — Navigation + Zones
-- direct navigation
-- Engineering
-- AI/Healthcare
-- Academy
-- Knowledge
-- Journey
-- Career
-
-### Phase 3 — Project Evidence
-- AutiSmart
-- ClinicOS
-- SchoolIEP
-- supporting projects
-
-### Phase 4 — Polish
-- camera transitions
-- restrained motion
-- hover/focus states
-- typography
-- loading experience
-- accessibility
-
-### Phase 5 — Mobile + Performance
-- mobile mode
-- asset/code splitting
-- DPR/performance tuning
-- reduced-motion support
-- keyboard/accessibility pass
-
-### Phase 6 — Verification
-- production build
-- browser verification
+### V2-D — Production verification
+- build/deploy check
+- live interaction check
 - console/error check
-- navigation/link check
-- responsive checks
-- performance sanity check
-- final factual consistency audit
+- responsive check
+- factual consistency check
 
-## 10. Success Criteria
+## Success Criteria
 
-The rebuild is successful only if:
+1. The first 10 seconds feel intentional and memorable.
+2. The world feels authored even before a zone is opened.
+3. The 3D layer adds emotional/spatial value rather than acting as decoration.
+4. AutiSmart remains the flagship.
+5. ClinicOS and SchoolIEP retain distinct visual identities.
+6. Recruiters can bypass the world at any time.
+7. No screenshots/video are required.
+8. No paid 3D assets/services are required.
+9. No unsupported professional, technical, medical or impact claims are introduced.
+10. The professional portfolio remains untouched.
 
-1. A visitor understands who Ali is within ~10 seconds.
-2. A recruiter can reach projects/CV/GitHub without exploring the 3D world.
-3. AutiSmart is clearly the flagship.
-4. Team vs personal contribution is never ambiguous.
-5. The experience feels distinctive without looking gimmicky.
-6. Mobile remains usable.
-7. The site does not require paid 3D assets or services to function.
-8. The existing professional website remains untouched and available.
-9. Performance is treated as a first-class feature.
-10. No unsupported professional, technical, healthcare, or impact claims are introduced.
+## Change Control
 
-## 11. Explicit Non-Goals
-
-- Rebuilding the current professional website inside 3D.
-- Making every piece of content a 3D object.
-- Adding screenshots or walkthrough videos as a requirement.
-- Chasing visual effects at the expense of usability.
-- Repeated cosmetic polishing without measurable improvement.
-
-## 12. Change Control
-
-Before each major implementation phase, verify the phase against this document. If a proposed change is only cosmetic and does not improve storytelling, usability, credibility, or performance, skip it.
-
-The project should evolve through deliberate milestones rather than ad-hoc edits.
+No new phase is opened for cosmetic tinkering. Every change must improve **storytelling, atmosphere, usability, credibility, or performance**. If it does not, skip it.
