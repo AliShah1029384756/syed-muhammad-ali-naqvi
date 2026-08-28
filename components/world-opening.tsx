@@ -18,8 +18,9 @@ function CameraController({
   const look = useRef({ x: 0, y: 1.05, z: 0 })
 
   useFrame((_, delta) => {
-    // Cinematic ease — slower approach into the hall, still responsive on focus.
-    const ease = 1 - Math.exp(-delta * (entered ? 1.65 : 1.15))
+    // Opening settles gently; zone focus stays more responsive.
+    const rate = !entered ? 1.15 : focusAngle !== null ? 1.85 : 1.25
+    const ease = 1 - Math.exp(-delta * rate)
     if (!entered) {
       camera.position.x += (start.current.x - camera.position.x) * ease * 0.55
       camera.position.y += (start.current.y - camera.position.y) * ease * 0.55
