@@ -37,10 +37,10 @@ export const ZONES: Zone[] = [
     angle: 0,
     title: 'Engineering Lab',
     kicker: 'SYSTEMS · ARCHITECTURE · FULL-STACK',
-    body: 'Practical full-stack systems: React, Node.js, Express, MongoDB, REST APIs, authentication, and structured product workflows. Breadth comes from university systems work and public case studies.',
+    body: 'Practical full-stack systems: React, Node.js, Express, MongoDB, REST APIs, authentication, and structured product workflows. ClinicOS is the deep experience in this zone — patients, sessions, treatment plans, and role-aware access.',
     points: [
-      'ClinicOS — healthcare workflow application (patients, sessions, plans, JWT + RBAC)',
-      'SchoolIEP — education IEP lifecycle, goals, progress, parent coordination',
+      'ClinicOS — patients, sessions, treatment plans, progress, JWT + RBAC',
+      'Stack focus: React, Vite, Node.js, Express, MongoDB, Mongoose',
       '17+ university projects across systems, databases, networking, compilers, algorithms',
     ],
     links: [
