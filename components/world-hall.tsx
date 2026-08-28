@@ -6,6 +6,8 @@ import {
 } from './world-data'
 import { Hall } from './world-hall-mesh'
 import { CameraController } from './world-opening'
+import { AutiSmartPanel } from './autismart-panel'
+import type { StageId } from './autismart-data'
 import './world-hall.css'
 
 function ZonePanel({
@@ -48,11 +50,15 @@ function MobileStage({
   onEnter,
   focus,
   setFocus,
+  stageId,
+  setStageId,
 }: {
   entered: boolean
   onEnter: () => void
   focus: string | null
   setFocus: (id: string | null) => void
+  stageId: StageId | null
+  setStageId: (id: StageId | null) => void
 }) {
   const activeZone = focus ? ZONES.find((z) => z.id === focus) ?? null : null
 
@@ -104,7 +110,15 @@ function MobileStage({
       )}
       {entered && activeZone && (
         <div className="mobile-panel">
-          <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
+          {activeZone.id === 'ai' ? (
+            <AutiSmartPanel
+              onClose={() => { setFocus(null); setStageId(null) }}
+              stageId={stageId}
+              setStageId={setStageId}
+            />
+          ) : (
+            <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
+          )}
         </div>
       )}
     </div>
@@ -114,6 +128,7 @@ function MobileStage({
 export function WorldHall() {
   const [entered, setEntered] = useState(false)
   const [focus, setFocus] = useState<string | null>(null)
+  const [stageId, setStageId] = useState<StageId | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [ready, setReady] = useState(false)
 
@@ -132,7 +147,7 @@ export function WorldHall() {
   useEffect(() => {
     if (!entered) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setFocus(null)
+      if (e.key === 'Escape') { setFocus(null); setStageId(null) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -170,6 +185,8 @@ export function WorldHall() {
           onEnter={() => setEntered(true)}
           focus={focus}
           setFocus={setFocus}
+          stageId={stageId}
+          setStageId={setStageId}
         />
       ) : (
         <>
@@ -182,7 +199,7 @@ export function WorldHall() {
             >
               <color attach="background" args={['#080a10']} />
               <fog attach="fog" args={['#080a10', 10, 22]} />
-              <Hall focusId={focus} />
+              <Hall focusId={focus} stageId={stageId} />
               <CameraController entered={entered} focusAngle={focusAngle} />
             </Canvas>
           </div>
@@ -220,7 +237,13 @@ export function WorldHall() {
                     </button>
                   ))}
                 </nav>
-                {activeZone ? (
+                {activeZone && activeZone.id === 'ai' ? (
+                  <AutiSmartPanel
+                    onClose={() => { setFocus(null); setStageId(null) }}
+                    stageId={stageId}
+                    setStageId={setStageId}
+                  />
+                ) : activeZone ? (
                   <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
                 ) : (
                   <p className="hint">Select a zone · camera glances toward the opening</p>
