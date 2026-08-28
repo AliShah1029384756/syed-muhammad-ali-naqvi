@@ -35,11 +35,11 @@ function CameraController({
     let lookY = 0.78
 
     if (focusAngle !== null) {
-      targetX = Math.sin(focusAngle) * 2.25
-      targetZ = 4.9 - Math.cos(focusAngle) * 1.15
-      targetY = 1.2
-      lookX = Math.sin(focusAngle) * 0.65
-      lookY = 0.9
+      targetX = Math.sin(focusAngle) * 2.45
+      targetZ = 4.65 - Math.cos(focusAngle) * 1.3
+      targetY = 1.28
+      lookX = Math.sin(focusAngle) * 0.82
+      lookY = 0.92
     }
 
     goal.current.x += (targetX - goal.current.x) * t
@@ -67,45 +67,48 @@ function Opening({
   const frameRef = useRef<Mesh>(null)
   const planeRef = useRef<Mesh>(null)
   const lintelRef = useRef<Mesh>(null)
+  const thresholdRef = useRef<Mesh>(null)
 
   useFrame((_, delta) => {
     const t = Math.min(delta * 2.6, 1)
     if (frameRef.current) {
       const mat = frameRef.current.material as THREE.MeshStandardMaterial
-      const target = active ? 0.18 : 0.03
+      const target = active ? 0.28 : 0.025
       mat.emissiveIntensity += (target - mat.emissiveIntensity) * t
     }
     if (planeRef.current) {
       const mat = planeRef.current.material as THREE.MeshBasicMaterial
-      const target = active ? 0.1 : 0.015
+      const target = active ? 0.14 : 0.012
       mat.opacity += (target - mat.opacity) * t
     }
     if (lintelRef.current) {
       const mat = lintelRef.current.material as THREE.MeshStandardMaterial
-      const target = active ? 0.14 : 0.02
+      const target = active ? 0.2 : 0.02
+      mat.emissiveIntensity += (target - mat.emissiveIntensity) * t
+    }
+    if (thresholdRef.current) {
+      const mat = thresholdRef.current.material as THREE.MeshStandardMaterial
+      const target = active ? 0.2 : 0.03
       mat.emissiveIntensity += (target - mat.emissiveIntensity) * t
     }
   })
 
   return (
     <group position={[zone.x, 1.45, zone.z]} rotation={[0, -zone.angle, 0]}>
-      <mesh position={[0, 0, -0.32]}>
-        <boxGeometry args={[1.7, 2.55, 0.55]} />
-        <meshStandardMaterial color="#06080e" roughness={1} metalness={0} />
+      {/* Deep recess */}
+      <mesh position={[0, 0, -0.55]}>
+        <boxGeometry args={[1.72, 2.58, 1.05]} />
+        <meshStandardMaterial color="#05070d" roughness={1} metalness={0} />
       </mesh>
+
+      {/* Architectural frame */}
       <mesh ref={frameRef} position={[0, 0, 0.02]}>
         <boxGeometry args={[2.05, 2.85, 0.12]} />
-        <meshStandardMaterial
-          color="#121822"
-          roughness={0.82}
-          metalness={0.12}
-          emissive="#c4b59a"
-          emissiveIntensity={0.03}
-        />
+        <meshStandardMaterial color="#121822" roughness={0.82} metalness={0.12} emissive="#c4b59a" emissiveIntensity={0.025} />
       </mesh>
-      <mesh ref={planeRef} position={[0, 0, -0.06]}>
+      <mesh ref={planeRef} position={[0, 0, -0.07]}>
         <planeGeometry args={[1.55, 2.4]} />
-        <meshBasicMaterial color="#d4c4a8" transparent opacity={0.015} />
+        <meshBasicMaterial color="#d4c4a8" transparent opacity={0.012} />
       </mesh>
       <mesh position={[-0.98, 0, 0.08]} castShadow>
         <boxGeometry args={[0.1, 2.85, 0.22]} />
@@ -117,26 +120,21 @@ function Opening({
       </mesh>
       <mesh ref={lintelRef} position={[0, 1.42, 0.1]} castShadow>
         <boxGeometry args={[2.1, 0.12, 0.26]} />
-        <meshStandardMaterial
-          color="#242c38"
-          roughness={0.45}
-          metalness={0.35}
-          emissive="#c4b59a"
-          emissiveIntensity={0.02}
-        />
+        <meshStandardMaterial color="#242c38" roughness={0.45} metalness={0.35} emissive="#c4b59a" emissiveIntensity={0.02} />
       </mesh>
-      <mesh position={[0, -1.48, 0.28]} castShadow>
+      <mesh ref={thresholdRef} position={[0, -1.48, 0.28]} castShadow>
         <boxGeometry args={[2.0, 0.1, 0.55]} />
-        <meshStandardMaterial color="#1a2030" roughness={0.55} metalness={0.25} />
+        <meshStandardMaterial color="#1a2030" roughness={0.55} metalness={0.25} emissive="#b9a887" emissiveIntensity={0.03} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.42, 0.35]}>
         <planeGeometry args={[1.85, 0.5]} />
-        <meshStandardMaterial
-          color={active ? '#2a2830' : '#0e121a'}
-          roughness={0.8}
-          metalness={0.08}
-        />
+        <meshStandardMaterial color={active ? '#343027' : '#0e121a'} roughness={0.8} metalness={0.08} />
       </mesh>
+
+      {/* A tiny warm pool makes the selected door feel like a place to go, not a selected button. */}
+      {active && (
+        <pointLight position={[0, -0.55, 0.55]} intensity={1.4} distance={3.8} decay={2} color="#d9c8a8" />
+      )}
     </group>
   )
 }
