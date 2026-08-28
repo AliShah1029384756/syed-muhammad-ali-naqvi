@@ -148,48 +148,76 @@ color: #e8e4dc;
 position: absolute;
 left: 50%;
 bottom: 28px;
-transform: translateX(-50%);
+transform: translateX(-50%) translateY(10px);
 display: flex;
 flex-wrap: wrap;
 justify-content: center;
-gap: 8px;
+gap: 6px;
 max-width: min(920px, 94vw);
-pointer-events: auto;
-padding: 8px;
+pointer-events: none;
+padding: 10px 12px;
 background: rgba(8, 10, 16, 0.55);
-border: 1px solid rgba(42, 52, 72, 0.6);
+border: 1px solid rgba(42, 52, 72, 0.55);
 backdrop-filter: blur(8px);
+opacity: 0;
+transition: opacity 0.85s ease, transform 0.85s ease;
+}
+.zone-nav.is-ready {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+pointer-events: auto;
 }
 .zone-nav button {
 border: 1px solid transparent;
 background: transparent;
-color: #7a7480;
+color: #5e5864;
 font-family: var(--font-geist-mono), monospace;
 font-size: 9px;
 letter-spacing: 0.1em;
-padding: 8px 12px;
+padding: 8px 11px;
 cursor: pointer;
 transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.zone-nav button.flagship {
+color: #9a948a;
+border-color: rgba(58, 52, 44, 0.45);
+padding: 9px 14px;
+}
+.zone-nav button.secondary {
+opacity: 0.72;
+font-size: 8px;
+letter-spacing: 0.08em;
 }
 .zone-nav button:hover {
 color: #c4beb4;
 }
+.zone-nav button.flagship:hover {
+color: #e0d8cc;
+border-color: #4a4238;
+}
 .zone-nav button.active {
 color: #c4b59a;
 border-color: #3a342c;
-background: rgba(196, 181, 154, 0.06);
+background: rgba(196, 181, 154, 0.08);
+opacity: 1;
 }
 .hint {
 position: absolute;
 left: 50%;
 bottom: 88px;
-transform: translateX(-50%);
+transform: translateX(-50%) translateY(6px);
 font-family: var(--font-geist-mono), monospace;
 font-size: 10px;
 letter-spacing: 0.1em;
 color: #5a5460;
 margin: 0;
 pointer-events: none;
+opacity: 0;
+transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s;
+}
+.hint.is-ready {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
 }
 .zone-panel {
 position: absolute;
@@ -430,7 +458,9 @@ font-size: 8px;
 }
 @media (prefers-reduced-motion: reduce) {
 .landing,
-.mobile-hall {
+.mobile-hall,
+.zone-nav,
+.hint {
 transition: none;
 }
 }
