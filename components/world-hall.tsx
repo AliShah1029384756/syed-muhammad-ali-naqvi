@@ -223,7 +223,7 @@ export function WorldHall() {
         <>
           <div className="canvas-wrap">
             <Canvas
-              camera={{ position: [0, 3.4, 12.5], fov: 38 }}
+              camera={{ position: [0, 3.55, 12.4], fov: 36 }}
               dpr={[1, 1.4]}
               gl={{ antialias: true, powerPreference: 'high-performance' }}
               shadows
