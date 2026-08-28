@@ -13,26 +13,27 @@ function CameraController({
   focusAngle: number | null
 }) {
   const { camera } = useThree()
-  const start = useRef({ x: 0, y: 3.85, z: 13.6 })
-  const goal = useRef({ x: 0, y: 1.55, z: 6.8 })
-  const look = useRef({ x: 0, y: 0.72, z: 0 })
+  const start = useRef({ x: 0, y: 3.55, z: 12.4 })
+  const goal = useRef({ x: 0, y: 1.48, z: 6.35 })
+  const look = useRef({ x: 0, y: 1.05, z: 0 })
 
   useFrame((_, delta) => {
-    const t = Math.min(delta * 1.2, 1)
+    // Cinematic ease — slower approach into the hall, still responsive on focus.
+    const ease = 1 - Math.exp(-delta * (entered ? 1.65 : 1.15))
     if (!entered) {
-      camera.position.x += (start.current.x - camera.position.x) * t * 0.48
-      camera.position.y += (start.current.y - camera.position.y) * t * 0.48
-      camera.position.z += (start.current.z - camera.position.z) * t * 0.48
-      look.current.y += (0.72 - look.current.y) * t * 0.45
+      camera.position.x += (start.current.x - camera.position.x) * ease * 0.55
+      camera.position.y += (start.current.y - camera.position.y) * ease * 0.55
+      camera.position.z += (start.current.z - camera.position.z) * ease * 0.55
+      look.current.y += (1.05 - look.current.y) * ease * 0.5
       camera.lookAt(0, look.current.y, 0)
       return
     }
 
     let targetX = 0
-    let targetY = 1.35
-    let targetZ = 4.85
+    let targetY = 1.32
+    let targetZ = 4.55
     let lookX = 0
-    let lookY = 0.78
+    let lookY = 0.95
 
     if (focusAngle !== null) {
       targetX = Math.sin(focusAngle) * 2.45
@@ -42,15 +43,15 @@ function CameraController({
       lookY = 0.92
     }
 
-    goal.current.x += (targetX - goal.current.x) * t
-    goal.current.y += (targetY - goal.current.y) * t
-    goal.current.z += (targetZ - goal.current.z) * t
-    look.current.x += (lookX - look.current.x) * t
-    look.current.y += (lookY - look.current.y) * t
+    goal.current.x += (targetX - goal.current.x) * ease
+    goal.current.y += (targetY - goal.current.y) * ease
+    goal.current.z += (targetZ - goal.current.z) * ease
+    look.current.x += (lookX - look.current.x) * ease
+    look.current.y += (lookY - look.current.y) * ease
 
-    camera.position.x += (goal.current.x - camera.position.x) * t
-    camera.position.y += (goal.current.y - camera.position.y) * t
-    camera.position.z += (goal.current.z - camera.position.z) * t
+    camera.position.x += (goal.current.x - camera.position.x) * ease
+    camera.position.y += (goal.current.y - camera.position.y) * ease
+    camera.position.z += (goal.current.z - camera.position.z) * ease
     camera.lookAt(look.current.x, look.current.y, 0)
   })
 
@@ -95,13 +96,11 @@ function Opening({
 
   return (
     <group position={[zone.x, 1.45, zone.z]} rotation={[0, -zone.angle, 0]}>
-      {/* Deep recess */}
       <mesh position={[0, 0, -0.55]}>
         <boxGeometry args={[1.72, 2.58, 1.05]} />
         <meshStandardMaterial color="#05070d" roughness={1} metalness={0} />
       </mesh>
 
-      {/* Architectural frame */}
       <mesh ref={frameRef} position={[0, 0, 0.02]}>
         <boxGeometry args={[2.05, 2.85, 0.12]} />
         <meshStandardMaterial color="#121822" roughness={0.82} metalness={0.12} emissive="#c4b59a" emissiveIntensity={0.025} />
@@ -131,7 +130,6 @@ function Opening({
         <meshStandardMaterial color={active ? '#343027' : '#0e121a'} roughness={0.8} metalness={0.08} />
       </mesh>
 
-      {/* A tiny warm pool makes the selected door feel like a place to go, not a selected button. */}
       {active && (
         <pointLight position={[0, -0.55, 0.55]} intensity={1.4} distance={3.8} decay={2} color="#d9c8a8" />
       )}
