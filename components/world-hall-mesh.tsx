@@ -108,15 +108,16 @@ function Hall({ focusId }: { focusId: string | null }) {
         <meshBasicMaterial color="#f0dcc0" />
       </mesh>
       <pointLight
-        position={[0, 3.7, 0]}
-        intensity={22}
-        distance={13}
+        position={[0, 3.75, 0]}
+        intensity={26}
+        distance={14}
         decay={2}
         color="#f0e2cc"
         castShadow
       />
-      <pointLight position={[2.5, 2.2, 3.5]} intensity={3.5} distance={12} color="#d8d0c4" />
-      <pointLight position={[-3, 1.8, -2]} intensity={2.2} distance={10} color="#b8c4d4" />
+      <pointLight position={[3.2, 2.0, 3.8]} intensity={2.8} distance={11} color="#c8d0dc" />
+      <pointLight position={[-3.4, 1.7, -2.4]} intensity={1.8} distance={10} color="#a8b4c4" />
+      <pointLight position={[0, 2.4, -4]} intensity={1.4} distance={9} color="#d8d0c0" />
 
       <group ref={axis}>
         <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
@@ -168,11 +169,11 @@ function Hall({ focusId }: { focusId: string | null }) {
         <Opening key={o.id} zone={o} active={focusId === o.id} />
       ))}
 
-      <ambientLight intensity={0.14} />
-      <hemisphereLight color="#6a7888" groundColor="#121018" intensity={0.38} />
+      <ambientLight intensity={0.12} />
+      <hemisphereLight color="#6a7888" groundColor="#0e1016" intensity={0.32} />
       <directionalLight
-        position={[-5, 8, 4]}
-        intensity={0.35}
+        position={[-5.5, 8.5, 4.5]}
+        intensity={0.28}
         color="#c5d0dc"
         castShadow
         shadow-mapSize-width={1024}
