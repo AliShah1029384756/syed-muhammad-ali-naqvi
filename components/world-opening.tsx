@@ -66,55 +66,75 @@ function Opening({
 }) {
   const frameRef = useRef<Mesh>(null)
   const planeRef = useRef<Mesh>(null)
+  const lintelRef = useRef<Mesh>(null)
 
   useFrame((_, delta) => {
-    const t = Math.min(delta * 3, 1)
+    const t = Math.min(delta * 2.6, 1)
     if (frameRef.current) {
       const mat = frameRef.current.material as THREE.MeshStandardMaterial
-      const target = active ? 0.22 : 0.04
+      const target = active ? 0.18 : 0.03
       mat.emissiveIntensity += (target - mat.emissiveIntensity) * t
     }
     if (planeRef.current) {
       const mat = planeRef.current.material as THREE.MeshBasicMaterial
-      const target = active ? 0.12 : 0.02
+      const target = active ? 0.1 : 0.015
       mat.opacity += (target - mat.opacity) * t
+    }
+    if (lintelRef.current) {
+      const mat = lintelRef.current.material as THREE.MeshStandardMaterial
+      const target = active ? 0.14 : 0.02
+      mat.emissiveIntensity += (target - mat.emissiveIntensity) * t
     }
   })
 
   return (
     <group position={[zone.x, 1.45, zone.z]} rotation={[0, -zone.angle, 0]}>
-      <mesh ref={frameRef} position={[0, 0, 0]}>
-        <boxGeometry args={[1.9, 2.7, 0.14]} />
+      <mesh position={[0, 0, -0.32]}>
+        <boxGeometry args={[1.7, 2.55, 0.55]} />
+        <meshStandardMaterial color="#06080e" roughness={1} metalness={0} />
+      </mesh>
+      <mesh ref={frameRef} position={[0, 0, 0.02]}>
+        <boxGeometry args={[2.05, 2.85, 0.12]} />
         <meshStandardMaterial
-          color="#10151e"
-          roughness={0.88}
-          metalness={0.1}
+          color="#121822"
+          roughness={0.82}
+          metalness={0.12}
           emissive="#c4b59a"
-          emissiveIntensity={0.04}
+          emissiveIntensity={0.03}
         />
       </mesh>
-      <mesh ref={planeRef} position={[0, 0, -0.08]}>
-        <planeGeometry args={[1.55, 2.35]} />
-        <meshBasicMaterial color="#c4b59a" transparent opacity={0.02} />
+      <mesh ref={planeRef} position={[0, 0, -0.06]}>
+        <planeGeometry args={[1.55, 2.4]} />
+        <meshBasicMaterial color="#d4c4a8" transparent opacity={0.015} />
       </mesh>
-      <mesh position={[-0.92, 0, 0.04]}>
-        <boxGeometry args={[0.06, 2.7, 0.1]} />
-        <meshStandardMaterial color="#1a2030" roughness={0.7} metalness={0.2} />
+      <mesh position={[-0.98, 0, 0.08]} castShadow>
+        <boxGeometry args={[0.1, 2.85, 0.22]} />
+        <meshStandardMaterial color="#1c2430" roughness={0.65} metalness={0.22} />
       </mesh>
-      <mesh position={[0.92, 0, 0.04]}>
-        <boxGeometry args={[0.06, 2.7, 0.1]} />
-        <meshStandardMaterial color="#1a2030" roughness={0.7} metalness={0.2} />
+      <mesh position={[0.98, 0, 0.08]} castShadow>
+        <boxGeometry args={[0.1, 2.85, 0.22]} />
+        <meshStandardMaterial color="#1c2430" roughness={0.65} metalness={0.22} />
       </mesh>
-      <mesh position={[0, 1.35, 0.04]}>
-        <boxGeometry args={[1.9, 0.06, 0.1]} />
-        <meshStandardMaterial color="#1a2030" roughness={0.7} metalness={0.2} />
-      </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.42, 0.2]}>
-        <planeGeometry args={[1.7, 0.35]} />
+      <mesh ref={lintelRef} position={[0, 1.42, 0.1]} castShadow>
+        <boxGeometry args={[2.1, 0.12, 0.26]} />
         <meshStandardMaterial
-          color={active ? '#2a2430' : '#12161f'}
-          roughness={0.85}
-          metalness={0.1}
+          color="#242c38"
+          roughness={0.45}
+          metalness={0.35}
+          emissive="#c4b59a"
+          emissiveIntensity={0.02}
+        />
+      </mesh>
+      <mesh position={[0, -1.48, 0.28]} castShadow>
+        <boxGeometry args={[2.0, 0.1, 0.55]} />
+        <meshStandardMaterial color="#1a2030" roughness={0.55} metalness={0.25} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.42, 0.35]}>
+        <planeGeometry args={[1.85, 0.5]} />
+        <meshStandardMaterial
+          color={active ? '#2a2830' : '#0e121a'}
+          roughness={0.8}
+          metalness={0.08}
         />
       </mesh>
     </group>
