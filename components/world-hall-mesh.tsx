@@ -7,8 +7,10 @@ import { ZONES } from './world-data'
 import { Opening } from './world-opening'
 import { AutiSmartSpace } from './autismart-space'
 import type { StageId } from './autismart-data'
+import { ClinicOSSpace } from './clinicos-space'
+import type { ClinicStageId } from './clinicos-data'
 
-function Hall({ focusId, stageId }: { focusId: string | null; stageId: StageId | null }) {
+function Hall({ focusId, stageId, clinicStageId }: { focusId: string | null; stageId: StageId | null; clinicStageId: ClinicStageId | null }) {
   const group = useRef<Group>(null)
   const axis = useRef<Group>(null)
 
@@ -172,6 +174,7 @@ function Hall({ focusId, stageId }: { focusId: string | null; stageId: StageId |
       ))}
 
       <AutiSmartSpace active={focusId === 'ai'} stageId={stageId} />
+      <ClinicOSSpace active={focusId === 'engineering'} stageId={clinicStageId} />
 
       <ambientLight intensity={0.12} />
       <hemisphereLight color="#6a7888" groundColor="#0e1016" intensity={0.32} />
