@@ -10,6 +10,8 @@ import { AutiSmartPanel } from './autismart-panel'
 import type { StageId } from './autismart-data'
 import { ClinicOSPanel } from './clinicos-panel'
 import type { ClinicStageId } from './clinicos-data'
+import { SchoolIEPPanel } from './schooliep-panel'
+import type { IepStageId } from './schooliep-data'
 import './world-hall.css'
 
 function ZonePanel({
@@ -56,6 +58,8 @@ function MobileStage({
   setStageId,
   clinicStageId,
   setClinicStageId,
+  iepStageId,
+  setIepStageId,
 }: {
   entered: boolean
   onEnter: () => void
@@ -65,6 +69,8 @@ function MobileStage({
   setStageId: (id: StageId | null) => void
   clinicStageId: ClinicStageId | null
   setClinicStageId: (id: ClinicStageId | null) => void
+  iepStageId: IepStageId | null
+  setIepStageId: (id: IepStageId | null) => void
 }) {
   const activeZone = focus ? ZONES.find((z) => z.id === focus) ?? null : null
 
@@ -128,6 +134,12 @@ function MobileStage({
               stageId={clinicStageId}
               setStageId={setClinicStageId}
             />
+          ) : activeZone.id === 'academy' ? (
+            <SchoolIEPPanel
+              onClose={() => { setFocus(null); setIepStageId(null) }}
+              stageId={iepStageId}
+              setStageId={setIepStageId}
+            />
           ) : (
             <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
           )}
@@ -142,6 +154,7 @@ export function WorldHall() {
   const [focus, setFocus] = useState<string | null>(null)
   const [stageId, setStageId] = useState<StageId | null>(null)
   const [clinicStageId, setClinicStageId] = useState<ClinicStageId | null>(null)
+  const [iepStageId, setIepStageId] = useState<IepStageId | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [ready, setReady] = useState(false)
 
@@ -160,7 +173,7 @@ export function WorldHall() {
   useEffect(() => {
     if (!entered) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { setFocus(null); setStageId(null); setClinicStageId(null) }
+      if (e.key === 'Escape') { setFocus(null); setStageId(null); setClinicStageId(null); setIepStageId(null) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -202,6 +215,8 @@ export function WorldHall() {
           setStageId={setStageId}
           clinicStageId={clinicStageId}
           setClinicStageId={setClinicStageId}
+          iepStageId={iepStageId}
+          setIepStageId={setIepStageId}
         />
       ) : (
         <>
@@ -214,7 +229,7 @@ export function WorldHall() {
             >
               <color attach="background" args={['#080a10']} />
               <fog attach="fog" args={['#080a10', 10, 22]} />
-              <Hall focusId={focus} stageId={stageId} clinicStageId={clinicStageId} />
+              <Hall focusId={focus} stageId={stageId} clinicStageId={clinicStageId} iepStageId={iepStageId} />
               <CameraController entered={entered} focusAngle={focusAngle} />
             </Canvas>
           </div>
@@ -263,6 +278,12 @@ export function WorldHall() {
                     onClose={() => { setFocus(null); setClinicStageId(null) }}
                     stageId={clinicStageId}
                     setStageId={setClinicStageId}
+                  />
+                ) : activeZone && activeZone.id === 'academy' ? (
+                  <SchoolIEPPanel
+                    onClose={() => { setFocus(null); setIepStageId(null) }}
+                    stageId={iepStageId}
+                    setStageId={setIepStageId}
                   />
                 ) : activeZone ? (
                   <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
