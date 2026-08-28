@@ -290,7 +290,7 @@ export function WorldHall() {
                 ) : activeZone ? (
                   <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
                 ) : (
-                  <p className="hint">Select a zone · camera glances toward the opening</p>
+                  <p className="hint">Flagships: AI / Healthcare · Engineering · Academy · other zones for context</p>
                 )}
               </>
             )}
