@@ -5,8 +5,10 @@ import type { Group } from 'three'
 import * as THREE from 'three'
 import { ZONES } from './world-data'
 import { Opening } from './world-opening'
+import { AutiSmartSpace } from './autismart-space'
+import type { StageId } from './autismart-data'
 
-function Hall({ focusId }: { focusId: string | null }) {
+function Hall({ focusId, stageId }: { focusId: string | null; stageId: StageId | null }) {
   const group = useRef<Group>(null)
   const axis = useRef<Group>(null)
 
@@ -168,6 +170,8 @@ function Hall({ focusId }: { focusId: string | null }) {
       {openings.map((o) => (
         <Opening key={o.id} zone={o} active={focusId === o.id} />
       ))}
+
+      <AutiSmartSpace active={focusId === 'ai'} stageId={stageId} />
 
       <ambientLight intensity={0.12} />
       <hemisphereLight color="#6a7888" groundColor="#0e1016" intensity={0.32} />
