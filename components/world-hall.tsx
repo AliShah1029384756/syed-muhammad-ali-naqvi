@@ -8,6 +8,8 @@ import { Hall } from './world-hall-mesh'
 import { CameraController } from './world-opening'
 import { AutiSmartPanel } from './autismart-panel'
 import type { StageId } from './autismart-data'
+import { ClinicOSPanel } from './clinicos-panel'
+import type { ClinicStageId } from './clinicos-data'
 import './world-hall.css'
 
 function ZonePanel({
@@ -52,6 +54,8 @@ function MobileStage({
   setFocus,
   stageId,
   setStageId,
+  clinicStageId,
+  setClinicStageId,
 }: {
   entered: boolean
   onEnter: () => void
@@ -59,6 +63,8 @@ function MobileStage({
   setFocus: (id: string | null) => void
   stageId: StageId | null
   setStageId: (id: StageId | null) => void
+  clinicStageId: ClinicStageId | null
+  setClinicStageId: (id: ClinicStageId | null) => void
 }) {
   const activeZone = focus ? ZONES.find((z) => z.id === focus) ?? null : null
 
@@ -116,6 +122,12 @@ function MobileStage({
               stageId={stageId}
               setStageId={setStageId}
             />
+          ) : activeZone.id === 'engineering' ? (
+            <ClinicOSPanel
+              onClose={() => { setFocus(null); setClinicStageId(null) }}
+              stageId={clinicStageId}
+              setStageId={setClinicStageId}
+            />
           ) : (
             <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
           )}
@@ -129,6 +141,7 @@ export function WorldHall() {
   const [entered, setEntered] = useState(false)
   const [focus, setFocus] = useState<string | null>(null)
   const [stageId, setStageId] = useState<StageId | null>(null)
+  const [clinicStageId, setClinicStageId] = useState<ClinicStageId | null>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [ready, setReady] = useState(false)
 
@@ -147,7 +160,7 @@ export function WorldHall() {
   useEffect(() => {
     if (!entered) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { setFocus(null); setStageId(null) }
+      if (e.key === 'Escape') { setFocus(null); setStageId(null); setClinicStageId(null) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -187,6 +200,8 @@ export function WorldHall() {
           setFocus={setFocus}
           stageId={stageId}
           setStageId={setStageId}
+          clinicStageId={clinicStageId}
+          setClinicStageId={setClinicStageId}
         />
       ) : (
         <>
@@ -199,7 +214,7 @@ export function WorldHall() {
             >
               <color attach="background" args={['#080a10']} />
               <fog attach="fog" args={['#080a10', 10, 22]} />
-              <Hall focusId={focus} stageId={stageId} />
+              <Hall focusId={focus} stageId={stageId} clinicStageId={clinicStageId} />
               <CameraController entered={entered} focusAngle={focusAngle} />
             </Canvas>
           </div>
@@ -242,6 +257,12 @@ export function WorldHall() {
                     onClose={() => { setFocus(null); setStageId(null) }}
                     stageId={stageId}
                     setStageId={setStageId}
+                  />
+                ) : activeZone && activeZone.id === 'engineering' ? (
+                  <ClinicOSPanel
+                    onClose={() => { setFocus(null); setClinicStageId(null) }}
+                    stageId={clinicStageId}
+                    setStageId={setClinicStageId}
                   />
                 ) : activeZone ? (
                   <ZonePanel zone={activeZone} onClose={() => setFocus(null)} />
