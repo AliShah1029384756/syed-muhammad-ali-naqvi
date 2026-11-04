@@ -8,7 +8,7 @@ This portfolio is designed as a digital representation of my professional work, 
 
 ### Featured work
 
-- **AutiSmart** — Final Year Project focused on AI-assisted autism screening and support. FYP-I: **A+**; FYP-II: **A-**. Developed, deployed, and presented as part of the final-year project team.
+- **AutiSmart** — Final Year Project focused on AI-assisted autism assessment and therapy-support workflows (academic, non-diagnostic prototype). FYP-I: **A+**; FYP-II: **A-**. Developed, deployed, and presented as part of the final-year project team.
 - **ClinicOS** — Healthcare operations and workflow platform.
 - **SchoolIEP** — Education-focused IEP records and workflow system.
 - **EduCore** — Open learning hub with 400+ curated technical resources.
